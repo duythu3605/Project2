@@ -3,7 +3,7 @@
 
 USING_NS_CC;
 
-Player::Player() : Obstacles("Player/test.jpg") {
+Player::Player() : Obstacles("Player/playertest.png") {
 	this->body->setContactTestBitmask(PLAYER_CONTACT_TEST_BITMASK);
 	this->body->setCategoryBitmask(PLAYER_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(PLAYER_COLLISION_BITMASK);
@@ -37,20 +37,20 @@ void Player::setHeart(int heart) {
 	this->heart = heart;
 }
 
-void Player::die() {
-	auto node = Node::create();
-	node->scheduleOnce([&](float dt) {
-		GameManager::end();
-		}, 5, "EndGame");
-	GameManager::getWorld()->addChild(node);
-
-	this->pause();
-}
+//void Player::die() {
+//	auto node = Node::create();
+//	node->scheduleOnce([&](float dt) {
+//		GameManager::end();
+//		}, 5, "EndGame");
+//	GameManager::getWorld()->addChild(node);
+//
+//	this->pause();
+//}
 
 void Player::update(float dt) {
-	if (this->heart <= 0) {
+	/*if (this->heart <= 0) {
 		this->die();
-	}
+	}*/
 }
 
 void Player::initEventListener() {		

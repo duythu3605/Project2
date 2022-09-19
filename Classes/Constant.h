@@ -9,6 +9,7 @@ enum class ContactType {
 	None,
 	Obstacles,
 	Player,
+	Sword,
 
 	
 };

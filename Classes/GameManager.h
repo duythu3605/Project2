@@ -15,11 +15,11 @@ private:
 	static Scene* world;
 	static std::vector<Obstacles*> enemies;
 	static Player* player;
-	static std::vector<Obstacles*> entities;
+	static std::vector<Obstacles*> obstacles;
 	static bool isPause;
 
-	//static void pauseGame();
-	//static void resumeGame();
+	static void pauseGame();
+	static void resumeGame();
 public:
 	GameManager();
 	~GameManager();

@@ -19,7 +19,7 @@ protected:
 
 public:
 	enum Enemies {
-		
+		Sword,
 	};
 
 	Obstacles();

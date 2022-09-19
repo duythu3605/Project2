@@ -14,12 +14,12 @@ private:
 	bool onContactBegin(PhysicsContact& contact);
 	void onContactSeparate(PhysicsContact& contact);
 	void initContactListener();
-	/*void initPlayerInfoUI();
+	void initPlayerInfoUI();
 	void updatePlayerInfo();
 	void initPauseMenu();
 	void followPlayer();
 	void initCameraUI();
-	void initBackground();*/
+	void initBackground();
 public:
 	static cocos2d::Scene* createScene();
 
