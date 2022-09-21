@@ -27,7 +27,8 @@ void Obstacles::init()
 {
 	this->speed = 0;
 	this->direction = Vec2::ZERO;
-
+	this->maxHP = 0;
+	this->hp = 0;
 	this->damage = 0;
 }
 
@@ -41,6 +42,14 @@ void Obstacles::setSpeed(float speed) {
 
 float Obstacles::getSpeed() {
 	return this->speed;
+}
+
+float Obstacles::getHP() {
+	return this->hp;
+}
+
+void Obstacles::setHP(float hp) {
+	this->hp = hp;
 }
 
 void Obstacles::setDirection(Vec2 direction) {
@@ -70,8 +79,23 @@ void Obstacles::setDamage(float damage) {
 	this->damage = damage;
 }
 
+void Obstacles::takeDamage(float damage) {
+	this->hp -= damage;
 
+	if (this->hp <= 0) {
+		this->hp = 0;
+		//this->sprite->setVisible(false);
+		GameManager::destroyObstacles(this);
+	}
+}
 
+void Obstacles::setMaxHP(float maxHP) {
+	this->maxHP = maxHP;
+}
+
+float Obstacles::getMaxHP() {
+	return this->maxHP;
+}
 
 
 void Obstacles::pause() {

@@ -7,8 +7,10 @@ Player::Player() : Obstacles("Player/playertest.png") {
 	this->body->setContactTestBitmask(PLAYER_CONTACT_TEST_BITMASK);
 	this->body->setCategoryBitmask(PLAYER_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(PLAYER_COLLISION_BITMASK);
-
+	
+	this->jumpFoc = 200;
 	this->init();
+
 }
 
 Player::~Player() {
@@ -20,10 +22,29 @@ void Player::init()
 
 	this->damage = 100;
 	this->heart = 1;
-
 	this->setSpeed(300);
+	this->setMaxHP(100);
+	this->setHP(50);
 
 	this->initEventListener();
+	
+}
+
+void Player::takeDamage(float damage) {
+	this->hp -= damage;
+	if (this->hp <= 0) {
+		if (this->heart > 0) {
+			this->heart--;
+			this->hp = this->maxHP;
+		}
+		else {
+			this->hp = 0;
+		}
+	}
+}
+
+void Player::Jump() {
+	this->body->setVelocity(Vec2(0,200));
 }
 
 
@@ -37,20 +58,20 @@ void Player::setHeart(int heart) {
 	this->heart = heart;
 }
 
-//void Player::die() {
-//	auto node = Node::create();
-//	node->scheduleOnce([&](float dt) {
-//		GameManager::end();
-//		}, 5, "EndGame");
-//	GameManager::getWorld()->addChild(node);
-//
-//	this->pause();
-//}
+void Player::die() {
+	auto node = Node::create();
+	node->scheduleOnce([&](float dt) {
+		GameManager::end();
+		}, 5, "EndGame");
+	GameManager::getWorld()->addChild(node);
+
+	this->pause();
+}
 
 void Player::update(float dt) {
-	/*if (this->heart <= 0) {
+	if (this->hp <= 0) {
 		this->die();
-	}*/
+	}
 }
 
 void Player::initEventListener() {		
@@ -69,16 +90,20 @@ void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 	switch (keyCode) {	
 	case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
 		newDirection.x = -1;
+		newDirection.normalize();
+		setDirection(newDirection);
 		break;
 	case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
 		newDirection.x = 1;
+		newDirection.normalize();
+		setDirection(newDirection);
+		break;
+	case EventKeyboard::KeyCode::KEY_UP_ARROW:
+		this->Jump();
 		break;
 	default:
 		break;
 	}
-
-	newDirection.normalize();
-	setDirection(newDirection);
 }
 
 void Player::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
@@ -88,14 +113,19 @@ void Player::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 	case EventKeyboard::KeyCode::KEY_LEFT_ARROW:
 	case EventKeyboard::KeyCode::KEY_RIGHT_ARROW:
 		newDirection.x = 0;
+		newDirection.normalize();
+		setDirection(newDirection);
+		break;
+	case EventKeyboard::KeyCode::KEY_UP_ARROW:	
 		break;
 	default:
 		break;
 	}
 
-	newDirection.normalize();
-	setDirection(newDirection);
+	
 }
+
+
 
 
 

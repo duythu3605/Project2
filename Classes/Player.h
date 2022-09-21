@@ -16,6 +16,8 @@ private:
 	void initEventListener();
 	void onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event);
 	void onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event);
+	float jumpFoc;
+	
 public:
 	Player();
 	~Player();
@@ -25,7 +27,7 @@ public:
 	int getHeart();
 	void setHeart(int heart);
 	void die();
-	void levelUp();
+	void Jump();
 };
 
 #endif // __PLAYER_H__

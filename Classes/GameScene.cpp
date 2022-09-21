@@ -3,6 +3,7 @@
 #include "GameManager.h"
 #include "Constant.h"
 #include "ui/CocosGUI.h"
+#include "Obstacles.h"
 
 USING_NS_CC;
 
@@ -36,7 +37,7 @@ bool GameScene::init()
 	GameManager::start();
 
 	// Init physics
-	this->getPhysicsWorld()->setGravity(Vec2::ZERO);
+	this->getPhysicsWorld()->setGravity(Vec2(0,-500));
 	this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	// Init contact listeners
@@ -44,8 +45,9 @@ bool GameScene::init()
 
 	// Init player
 	this->player = GameManager::getPlayer() ? GameManager::getPlayer() : new Player();
-	this->player->getSprite()->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 8));
+	this->player->getSprite()->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 7.1));
 	this->player->getSprite()->setLocalZOrder(1);
+	this->setPositionP(this->player->getSprite()->getPosition());
 	GameManager::addObstacles(player);
 	GameManager::setPlayer(player);
 
@@ -56,9 +58,18 @@ bool GameScene::init()
 	//this->initBackground();
 	//this->initPauseMenu();
 	this->initPlayerInfoUI();
+	this->initYard();
 
 	scheduleUpdate();
 	return true;
+}
+void GameScene::setPositionP(Vec2 position) {
+	this->position = position;
+	
+}
+
+Vec2 GameScene::getPositionP() {
+	return this->position;
 }
 
 void GameScene::update(float dt) {
@@ -80,13 +91,19 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 	if (nodeA && nodeB) {
 		/*nodeA->setColor(Color3B::BLACK);
 		nodeB->setColor(Color3B::BLACK);*/
+		if (nodeA->getTag() == (int)ContactType::Sword)
+		{
+			nodeB->removeFromParentAndCleanup(true);
+		}
 
 		Obstacles* entityA = GameManager::findObstacles((Sprite*)nodeA);
 		Obstacles* entityB = GameManager::findObstacles((Sprite*)nodeB);
 		float damageA = entityA->getDamage();
 		float damageB = entityB->getDamage();
-		/*entityA->takeDamage(damageB);
-		entityB->takeDamage(damageA);*/
+		entityA->takeDamage(damageB);
+		entityB->takeDamage(damageA);
+
+		
 	}
 
 	return true;
@@ -96,49 +113,13 @@ void GameScene::onContactSeparate(PhysicsContact& contact) {
 	Node* nodeA = contact.getShapeA()->getBody()->getNode();
 	Node* nodeB = contact.getShapeB()->getBody()->getNode();
 
-	/*nodeA->setColor(Color3B::WHITE);
-	nodeB->setColor(Color3B::WHITE);*/
+	
 }
 
 
 void GameScene::initPlayerInfoUI() {
 	this->playerInfo = Node::create();
 	playerInfo->setAnchorPoint(Vec2(0, 0.5));
-
-	//// HP
-	//Sprite* hpBarBG = Sprite::create("hpBarBG.png");
-	//hpBarBG->setName("hpBarBG");
-	//hpBarBG->setContentSize(Size(200, 20));
-	//hpBarBG->setAnchorPoint(Vec2(0, 0.5));
-
-	//Sprite* hpBar = Sprite::create("hpBar.png");
-	//hpBar->setName("hpBar");
-	//hpBar->setContentSize(Size(200, 20));
-	//hpBar->setAnchorPoint(Vec2(0, 0.5));
-
-	//playerInfo->addChild(hpBarBG);
-	//playerInfo->addChild(hpBar);
-
-	//// Heart: Heart Count & Heart Icon
-	//Node* heart = Node::create();
-	//heart->setName("heart");
-	//heart->setAnchorPoint(Vec2(0, 0.5));
-
-	//Label* heartLabel = Label::createWithTTF("5", "fonts/Marker Felt.ttf", 20);
-	//heartLabel->setName("heartLabel");
-	//heartLabel->setAnchorPoint(Vec2(0, 0.5));
-
-	//Sprite* heartIcon = Sprite::create("heart.png");
-	//heartIcon->setContentSize(Size(20, 20));
-	//heartIcon->setAnchorPoint(Vec2(0, 0.5));
-	//const float padding = 8;
-	//heartIcon->setPosition(Vec2(heartLabel->getContentSize().width + padding, 0));
-
-	//heart->addChild(heartLabel);
-	//heart->addChild(heartIcon);
-
-	//heart->setPosition(Vec2(hpBarBG->getContentSize().width + 16, 0));
-	//playerInfo->addChild(heart);
 
 	addChild(playerInfo);
 	playerInfo->setPosition(Vec2(50, 50) - GameManager::getVisibleSize() / 2);
@@ -147,48 +128,8 @@ void GameScene::initPlayerInfoUI() {
 }
 
 void GameScene::updatePlayerInfo() {
-	/*auto hpBarBG = this->playerInfo->getChildByName("hpBarBG");
-	auto hpBar = this->playerInfo->getChildByName("hpBar");
-	auto heartLabel = this->playerInfo->getChildByName("heart")->getChildByName("heartLabel");
-
-	const Size hpBarMaxSize = hpBarBG->getContentSize();
-	Size hpBarSize = hpBarMaxSize;
-	hpBarSize.width = this->player->getHP() / this->player->getMaxHP() * hpBarMaxSize.width;
-	hpBar->setContentSize(hpBarSize);
-
-	((Label*)heartLabel)->setString(std::to_string(this->player->getHeart()));*/
+	
 }
-
-//void GameScene::initPauseMenu() {
-//	ui::Button* btnPause = ui::Button::create("btnPauseNormal.png", "btnPauseSelected.png", "btnPauseNormal.png");
-//	btnPause->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
-//		switch (type) {
-//		case ui::Widget::TouchEventType::BEGAN:
-//			break;
-//		case ui::Widget::TouchEventType::ENDED:
-//			log("Pressed");
-//			GameManager::pause();
-//			scheduleOnce([](float dt) {
-//				GameManager::resume();
-//				}, 3, "resumeGame");
-//			break;
-//		default:
-//			break;
-//		}
-//		});
-//
-//	float factor = 30; //GameManager::getVisibleSize().width / 16;
-//	float xscale = factor / btnPause->getContentSize().width;
-//	float yscale = factor / btnPause->getContentSize().height;
-//	btnPause->setScale(xscale, yscale);
-//	btnPause->setPosition(Vec2(50, GameManager::getVisibleSize().height - 50) - GameManager::getVisibleSize() / 2);
-//	addChild(btnPause);
-//	btnPause->setCameraMask((unsigned int)this->cameraUI->getCameraFlag());
-//
-//	/*auto followPlayer = Follow::create(player->getSprite(), Rect(0,
-//		0, 1600, 1200));
-//	runAction(followPlayer);*/
-//}
 
 void GameScene::followPlayer() {
 	auto camera = getDefaultCamera();
@@ -211,6 +152,26 @@ void GameScene::initCameraUI() {
 	Vec3 eyePosOld = this->cameraUI->getPosition3D();
 	this->cameraUI->setPosition3D(Vec3(0, 0, eyePosOld.z));
 	this->cameraUI->lookAt(Vec3(0, 0, 0));
+}
+void GameScene::initYard(){
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	auto frontback = Sprite::create("Yard/yard.png");
+	frontback->setContentSize(Size(visibleSize.width, visibleSize.height* 0.1));
+	frontback->setAnchorPoint(Vec2(0, 0));
+
+	//land body
+	getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	
+	auto landBody1 = PhysicsBody::createBox(frontback->getContentSize());
+	landBody1->setDynamic(false);
+	frontback->addComponent(landBody1);
+	frontback->getPhysicsBody()->setCategoryBitmask(YARD_CONTACT_TEST_BITMASK);
+	frontback->getPhysicsBody()->setCollisionBitmask(YARD_CATEGORY_BITMASK);
+	frontback->getPhysicsBody()->setContactTestBitmask(YARD_COLLISION_BITMASK);
+	//frontback->setTag((int)ContactType::Yard);
+	addChild(frontback);
 }
 
 //void GameScene::initBackground() {

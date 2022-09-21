@@ -10,6 +10,7 @@ private:
 	Player* player;
 	Node* playerInfo;
 	Camera* cameraUI;
+	Vec2 position;
 
 	bool onContactBegin(PhysicsContact& contact);
 	void onContactSeparate(PhysicsContact& contact);
@@ -20,6 +21,10 @@ private:
 	void followPlayer();
 	void initCameraUI();
 	void initBackground();
+	void setPositionP(Vec2 position);
+	Vec2 getPositionP();
+	void initYard();
+	
 public:
 	static cocos2d::Scene* createScene();
 

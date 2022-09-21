@@ -61,15 +61,16 @@ void GameManager::spawnEnemies() {
 	int enemyMinRand = 0;
 	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
 
-	int positionMaxRand = 100;
-	int positionMinRand = -100;
-	int positionX = rand() % (positionMaxRand - positionMinRand + 1) + positionMinRand;
-	//int positionY = rand() % (positionMaxRand - positionMinRand + 1) + positionMinRand;
+	
+	
+	//int positionX = random(100, 800);
+	
 
-	Vec2 direction = Vec2(positionX, 300);
-	direction.normalize();
-	const float padding = 100;
-	Vec2 position = direction * (getVisibleSize().width / 2 + padding) + getVisibleSize() / 2;
+	//Vec2 direction = Vec2(positionX, 800);
+	//direction.normalize();
+	//const float padding = 0;
+	Vec2 position = Vec2 (random(100, 800),800);
+	
 
 	Obstacles* enemy = NULL;
 	switch (enemyType) {
@@ -85,6 +86,7 @@ void GameManager::spawnEnemies() {
 	enemy->getSprite()->setPosition(position);
 	GameManager::world->addChild(enemy->getSprite());
 	enemy->init();
+	
 	enemies.push_back(enemy);
 	obstacles.push_back(enemy);
 }
@@ -95,7 +97,11 @@ void GameManager::update(float dt) {
 		return;
 	}
 	player->update(dt);
-	
+	for (Obstacles* enemy : enemies) {
+		if (enemy != NULL) {
+			enemy->update(dt);
+		}
+	}
 }
 
 void GameManager::addObstacles(Obstacles* obstacle) {
