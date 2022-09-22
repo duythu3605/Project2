@@ -37,7 +37,7 @@ bool GameScene::init()
 	GameManager::start();
 
 	// Init physics
-	this->getPhysicsWorld()->setGravity(Vec2(0,-500));
+	this->getPhysicsWorld()->setGravity(Vec2(0,-300));
 	this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
 
 	// Init contact listeners
@@ -84,6 +84,10 @@ void GameScene::initContactListener() {
 	_eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 }
 
+template<typename Base, typename T>
+inline bool instanceof(const T *ptr) {
+	return dynamic_cast<const Base*>(ptr) != nullptr;
+}
 bool GameScene::onContactBegin(PhysicsContact& contact) {
 	Node* nodeA = contact.getShapeA()->getBody()->getNode();
 	Node* nodeB = contact.getShapeB()->getBody()->getNode();
@@ -93,16 +97,18 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 		nodeB->setColor(Color3B::BLACK);*/
 		if (nodeA->getTag() == (int)ContactType::Sword)
 		{
-			nodeB->removeFromParentAndCleanup(true);
+			nodeA->removeFromParentAndCleanup(true);
 		}
 
 		Obstacles* entityA = GameManager::findObstacles((Sprite*)nodeA);
 		Obstacles* entityB = GameManager::findObstacles((Sprite*)nodeB);
-		float damageA = entityA->getDamage();
-		float damageB = entityB->getDamage();
-		entityA->takeDamage(damageB);
-		entityB->takeDamage(damageA);
 
+		if (instanceof<Obstacles>(entityA) && instanceof<Obstacles>(entityB)) {
+			float damageA = entityA->getDamage();
+			float damageB = entityB->getDamage();
+			entityA->takeDamage(damageB);
+			entityB->takeDamage(damageA);
+		}
 		
 	}
 

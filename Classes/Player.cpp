@@ -4,11 +4,16 @@
 USING_NS_CC;
 
 Player::Player() : Obstacles("Player/playertest.png") {
+	this->sprite->removeComponent(this->body);
+	this->body = PhysicsBody::createBox(this->sprite->getContentSize() , PhysicsMaterial(1.0f, 0, 0));
+	this->body->setDynamic(true);
+	this->sprite->addComponent(body);
 	this->body->setContactTestBitmask(PLAYER_CONTACT_TEST_BITMASK);
 	this->body->setCategoryBitmask(PLAYER_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(PLAYER_COLLISION_BITMASK);
 	
-	this->jumpFoc = 200;
+	//this->body = PhysicsBody::createBox(Size(50, 80), PhysicsMaterial(1.0f, 0, 0));
+	
 	this->init();
 
 }
@@ -23,9 +28,9 @@ void Player::init()
 	this->damage = 100;
 	this->heart = 1;
 	this->setSpeed(300);
-	this->setMaxHP(100);
-	this->setHP(50);
-
+	this->setMaxHP(1);
+	this->setHP(1);
+	this->jumpFoc = 200;
 	this->initEventListener();
 	
 }
@@ -44,7 +49,7 @@ void Player::takeDamage(float damage) {
 }
 
 void Player::Jump() {
-	this->body->setVelocity(Vec2(0,200));
+	this->body->setVelocity(Vec2(0, this->jumpFoc));
 }
 
 
@@ -62,15 +67,24 @@ void Player::die() {
 	auto node = Node::create();
 	node->scheduleOnce([&](float dt) {
 		GameManager::end();
-		}, 5, "EndGame");
+		}, 1, "EndGame");
 	GameManager::getWorld()->addChild(node);
 
 	this->pause();
 }
 
 void Player::update(float dt) {
+	auto newDirection = direction;
 	if (this->hp <= 0) {
 		this->die();
+	}	
+
+	if (this->sprite->getPositionY() > GameManager::getVisibleSize().height / 5.5) {
+		this->body->setGravityEnable(true);
+	}
+
+	if (newDirection.y > 0) {
+		CCLOG("len");
 	}
 }
 
@@ -100,6 +114,7 @@ void Player::onKeyPressed(EventKeyboard::KeyCode keyCode, Event* event) {
 		break;
 	case EventKeyboard::KeyCode::KEY_UP_ARROW:
 		this->Jump();
+		this->body->setGravityEnable(false);
 		break;
 	default:
 		break;
@@ -115,13 +130,15 @@ void Player::onKeyReleased(EventKeyboard::KeyCode keyCode, Event* event) {
 		newDirection.x = 0;
 		newDirection.normalize();
 		setDirection(newDirection);
+		
 		break;
 	case EventKeyboard::KeyCode::KEY_UP_ARROW:	
+		this->body->setGravityEnable(true);
 		break;
 	default:
 		break;
 	}
-
+	
 	
 }
 

@@ -1,14 +1,14 @@
-#include "Obstacles.h"
+#include "Entity.h"
 #include "Constant.h"
 #include "GameManager.h"
 
 USING_NS_CC;
 
-Obstacles::Obstacles() {
+Entity::Entity() {
 
 }
 
-Obstacles::Obstacles(const string& file) {
+Entity::Entity(const string& file) {
 	this->sprite = Sprite::create(file);
 
 	this->body = PhysicsBody::createBox(this->sprite->getContentSize());
@@ -19,11 +19,11 @@ Obstacles::Obstacles(const string& file) {
 	this->init();
 }
 
-Obstacles::~Obstacles() {
+Entity::~Entity() {
 
 }
 
-void Obstacles::init()
+void Entity::init()
 {
 	this->speed = 0;
 	this->direction = Vec2::ZERO;
@@ -32,78 +32,78 @@ void Obstacles::init()
 	this->damage = 0;
 }
 
-void Obstacles::update(float dt) {
+void Entity::update(float dt) {
 }
 
-void Obstacles::setSpeed(float speed) {
+void Entity::setSpeed(float speed) {
 	this->speed = speed;
 	this->body->setVelocity(direction * speed);
 }
 
-float Obstacles::getSpeed() {
+float Entity::getSpeed() {
 	return this->speed;
 }
 
-float Obstacles::getHP() {
+float Entity::getHP() {
 	return this->hp;
 }
 
-void Obstacles::setHP(float hp) {
+void Entity::setHP(float hp) {
 	this->hp = hp;
 }
 
-void Obstacles::setDirection(Vec2 direction) {
+void Entity::setDirection(Vec2 direction) {
 	this->direction = direction;
 	this->body->setVelocity(direction * speed);
 }
 
-Vec2 Obstacles::getDirection() {
+Vec2 Entity::getDirection() {
 	return this->direction;
 }
 
-Sprite* Obstacles::getSprite() {
+Sprite* Entity::getSprite() {
 	return this->sprite;
 }
 
-void Obstacles::destroy() {
-	//this->sprite->removeFromParentAndCleanup(true);
+void Entity::destroy() {
+	this->sprite->removeFromParentAndCleanup(true);
 }
 
 
 
-float Obstacles::getDamage() {
+float Entity::getDamage() {
 	return this->damage;
 }
 
-void Obstacles::setDamage(float damage) {
+void Entity::setDamage(float damage) {
 	this->damage = damage;
 }
 
-void Obstacles::takeDamage(float damage) {
+void Entity::takeDamage(float damage) {
 	this->hp -= damage;
 
 	if (this->hp <= 0) {
 		this->hp = 0;
 		//this->sprite->setVisible(false);
-		GameManager::destroyObstacles(this);
+		//GameManager::destroyObstacles(this);
 	}
 }
 
-void Obstacles::setMaxHP(float maxHP) {
+void Entity::setMaxHP(float maxHP) {
 	this->maxHP = maxHP;
 }
 
-float Obstacles::getMaxHP() {
+float Entity::getMaxHP() {
 	return this->maxHP;
 }
 
 
-void Obstacles::pause() {
+void Entity::pause() {
 	this->body->setVelocity(Vec2::ZERO);
 	this->sprite->pause();
 }
 
-void Obstacles::resume() {
+void Entity::resume() {
 	this->body->setVelocity(this->speed * this->direction);
 	this->sprite->resume();
 }

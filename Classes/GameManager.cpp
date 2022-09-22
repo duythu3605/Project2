@@ -52,7 +52,7 @@ void GameManager::start() {
 // Schedule spawn enemies
 	world->schedule([](float dt) {
 		spawnEnemies();
-		}, 1, "SpawnEnemies");
+		}, 5, "SpawnEnemies");
 	
 }
 

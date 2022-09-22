@@ -1,15 +1,15 @@
-#ifndef __OBSTACLES_H__
-#define __OBSTACLES_H__
+#ifndef __ENTITY_H__
+#define __ENTITY_H__
 
 #include "cocos2d.h"
 
 USING_NS_CC;
 using namespace std;
 
-class Obstacles
+class Entity
 {
 private:
-public:
+protected:
 	Sprite* sprite;
 	float speed;
 	Vec2 direction;
@@ -18,15 +18,16 @@ public:
 	float maxHP;
 	float hp;
 	float damage;
+	
 
-
+public:
 	enum Enemies {
-		Sword,
+		
 	};
 
-	Obstacles();
-	Obstacles(const string& file);
-	~Obstacles();
+	Entity();
+	Entity(const string& file);
+	~Entity();
 	virtual void init();
 	virtual void update(float dt);
 	virtual void destroy();
@@ -46,4 +47,4 @@ public:
 	void resume();
 };
 
-#endif // __OBSTACLES_H__
+#endif // __ENTITY_H__

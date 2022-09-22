@@ -5,6 +5,7 @@
 #include "Constant.h"
 #include <vector>
 #include "Obstacles.h"
+//#include "Entity.h"
 #include "Player.h"
 
 USING_NS_CC;
@@ -33,6 +34,8 @@ public:
 	static void addObstacles(Obstacles* entity);
 	static Obstacles* findObstacles(Sprite* sprite);
 	static void destroyObstacles(Obstacles* entity);
+
+	//static void destroyEnity(Entity* entity);
 
 	static void spawnEnemies();
 	static void start();
