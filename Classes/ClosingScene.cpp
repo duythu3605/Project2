@@ -1,4 +1,6 @@
 #include "ClosingScene.h"
+#include "GameScene.h"
+#include "MainMenuScene.h"
 
 USING_NS_CC;
 
@@ -30,6 +32,22 @@ bool ClosingScene::init()
 	auto label = Label::createWithSystemFont("Game Over", "Arial", 30);
 	addChild(label);
 	label->setPosition(visibleSize / 2);
+
+	Vector<MenuItem*> menuItems = {
+		MenuItemLabel::create(Label::createWithSystemFont("Play Again", "Arial", 20)  , [=](Ref* sender) {
+		auto gameScene = GameScene::create();
+			Director::getInstance()->replaceScene(gameScene);
+			
+		}),
+		MenuItemLabel::create(Label::createWithSystemFont("Quit", "Arial", 20)  , [=](Ref* sender) {
+			Director::getInstance()->end();
+		}),
+	};
+
+	auto menu = Menu::createWithArray(menuItems);
+	addChild(menu);
+	menu->alignItemsVertically();
+	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 1.8));
 
 	return true;
 }

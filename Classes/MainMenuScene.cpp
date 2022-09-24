@@ -1,7 +1,7 @@
 #include "MainMenuScene.h"
 #include "AudioEngine.h"
 #include "GameScene.h"
-
+#include "GameManager.h"
 USING_NS_CC;
 
 Scene* MainMenuScene::createScene()
@@ -40,8 +40,9 @@ bool MainMenuScene::init()
 
 	Vector<MenuItem*> menuItems = {
 		MenuItemLabel::create(Label::createWithSystemFont("Play", "Arial", 20)  , [=](Ref* sender) {
-			auto gameScene = GameScene::create();
-			Director::getInstance()->replaceScene(gameScene);
+			this->gameScene = GameScene::create();
+			Director::getInstance()->replaceScene(this->gameScene);
+			
 		}),
 		MenuItemLabel::create(this->soundLabel, [&](Ref* sender) {
 			this->soundOn = !this->soundOn;

@@ -38,7 +38,7 @@ bool GameScene::init()
 
 	// Init physics
 	this->getPhysicsWorld()->setGravity(Vec2(0,-300));
-	this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_NONE);
 
 	// Init contact listeners
 	this->initContactListener();
@@ -52,7 +52,7 @@ bool GameScene::init()
 	GameManager::setPlayer(player);
 
 	//// Camera
-	//this->initCameraUI();
+	this->initCameraUI();
 
 	//// GUI
 	this->initBackground();
@@ -175,7 +175,7 @@ void GameScene::initYard(){
 	frontback->setAnchorPoint(Vec2(0, 0));
 
 	//land body
-	getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);
+	
 	
 	auto landBody1 = PhysicsBody::createBox(frontback->getContentSize());
 	landBody1->setDynamic(false);
@@ -183,7 +183,7 @@ void GameScene::initYard(){
 	frontback->getPhysicsBody()->setCategoryBitmask(YARD_CONTACT_TEST_BITMASK);
 	frontback->getPhysicsBody()->setCollisionBitmask(YARD_CATEGORY_BITMASK);
 	frontback->getPhysicsBody()->setContactTestBitmask(YARD_COLLISION_BITMASK);
-	//frontback->setTag((int)ContactType::Yard);
+	
 	addChild(frontback);
 }
 void GameScene::initPauseMenu() {
@@ -210,13 +210,24 @@ void GameScene::initPauseMenu() {
 	btnPause->setScale(xscale, yscale);
 	btnPause->setPosition(Vec2(50, GameManager::getVisibleSize().height - 50) - GameManager::getVisibleSize() / 2);
 	addChild(btnPause);
-	
+	btnPause->setCameraMask((unsigned int)this->cameraUI->getCameraFlag());
 
 	/*auto followPlayer = Follow::create(player->getSprite(), Rect(0,
 		0, 1600, 1200));
 	runAction(followPlayer);*/
 }
+//void GameScene::initMark() {
+//	
+//}
+void GameScene::initCameraUI() {
+	this->cameraUI = Camera::create();
+	this->cameraUI->setCameraFlag(CameraFlag::USER1);
+	addChild(this->cameraUI);
 
+	Vec3 eyePosOld = this->cameraUI->getPosition3D();
+	this->cameraUI->setPosition3D(Vec3(0, 0, eyePosOld.z));
+	this->cameraUI->lookAt(Vec3(0, 0, 0));
+}
 void GameScene::initBackground() {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();

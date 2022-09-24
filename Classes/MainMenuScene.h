@@ -6,11 +6,13 @@ USING_NS_CC;
 
 class MainMenuScene : public Scene
 {
-private:
+public:
 	int backgroundMusic = -1;
 	bool soundOn = true;
 	Label *soundLabel;
-public:
+	Scene* gameScene;
+	
+
 	static Scene* createScene();
 
 	virtual bool init();

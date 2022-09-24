@@ -6,10 +6,10 @@
 
 class GameScene : public cocos2d::Scene
 {
-private:
+public:
 	Player* player;
 	Node* playerInfo;
-	//Camera* cameraUI;
+	Camera* cameraUI;
 	Vec2 position;
 
 	bool onContactBegin(PhysicsContact& contact);
@@ -21,12 +21,13 @@ private:
 	//void followPlayer();
 	void PrePosition();
 	void PreRotation();
-	//void initCameraUI();
+	void initCameraUI();
 	void initBackground();
 	Vec2 getPositionP();
 	void initYard();
+	//void initMark();
 	
-public:
+
 	static cocos2d::Scene* createScene();
 
 	virtual bool init();

@@ -5,13 +5,14 @@
 #include "Sword.h"
 #include "Bomb.h"
 #include "Rock.h"
-
+#include "MainMenuScene.h"
 #include "ClosingScene.h"
 #include "GameScene.h"
 
 USING_NS_CC;
 
 Scene* GameManager::world = NULL;
+//Scene* GameManager::startscene = NULL;
 	std::vector<Entity*> GameManager::entities;
 	std::vector<Obstacles*> GameManager::enemies;
 	std::vector<Obstacles*> GameManager::obstacles;
@@ -179,7 +180,17 @@ void GameManager::resumeGame() {
 	//world->resume();
 }
 //
+//void GameManager::setStart(Scene* start) {
+//	GameManager::startscene = start;
+//	Director::getInstance()->replaceScene(start);
+//}
+//
+//Scene* GameManager::getStart() {
+//	return GameManager::startscene;
+//}
+
 void GameManager::end() {
+	
 	auto closingScene = ClosingScene::create();
 	Director::getInstance()->replaceScene(closingScene);
 }
@@ -188,11 +199,21 @@ void GameManager::pause() {
 	isPause = true;
 }
 //
+//void GameManager::pushScene(Scene* gameScene) {
+//	Director::getInstance()->pushScene(gameScene);
+//}
+//void GameManager::popScene() {
+//	Director::getInstance()->popScene();
+//}
 void GameManager::resume() {
 	isPause = false;
 	resumeGame();
 }
 
-void GameManager::nextStage() {
-
-}
+//void GameManager::setMark(float time) {
+//	mark = 0;
+//	mark = mark + time;
+//}
+//float GameManager::getMark() {
+//	return mark;
+//}

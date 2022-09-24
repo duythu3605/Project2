@@ -25,7 +25,7 @@ Player::~Player() {
 void Player::init()
 {
 
-	this->damage = 100;
+	this->damage = 1;
 	this->heart = 1;
 	this->setSpeed(300);
 	this->setMaxHP(1);
