@@ -45,36 +45,64 @@ bool GameScene::init()
 
 	// Init player
 	this->player = GameManager::getPlayer() ? GameManager::getPlayer() : new Player();
-	this->player->getSprite()->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 7.1));
+	this->player->getSprite()->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 5));
 	this->player->getSprite()->setLocalZOrder(1);
-	this->setPositionP(this->player->getSprite()->getPosition());
-	GameManager::addObstacles(player);
+	
+	GameManager::addEntity(player);
 	GameManager::setPlayer(player);
 
 	//// Camera
-	this->initCameraUI();
+	//this->initCameraUI();
 
 	//// GUI
-	//this->initBackground();
-	//this->initPauseMenu();
+	this->initBackground();
+	this->initPauseMenu();
 	this->initPlayerInfoUI();
 	this->initYard();
 
 	scheduleUpdate();
 	return true;
 }
-void GameScene::setPositionP(Vec2 position) {
-	this->position = position;
-	
-}
+
 
 Vec2 GameScene::getPositionP() {
 	return this->position;
 }
 
 void GameScene::update(float dt) {
+	PrePosition();
+	PreRotation();
+	this->updatePlayerInfo();
+
 	
 	GameManager::update(dt);
+}
+
+void GameScene::PrePosition() {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	float x = visibleSize.width;
+	float y = visibleSize.height;
+
+	Vec2 prePosition = this->player->getSprite()->getPosition();
+	if (prePosition.x > x - 50) {
+		Vec2 newPosition = Vec2(x - 50, prePosition.y);
+		this->player->getSprite()->setPosition(newPosition);
+	}
+	else if (prePosition.x < 50) {
+		Vec2 newPosition = Vec2(50, prePosition.y);
+		this->player->getSprite()->setPosition(newPosition);
+	}
+}
+void GameScene::PreRotation() {
+	float preRotate = this->player->getSprite()->getRotation();
+	if (preRotate > 0)
+	{
+		this->player->getSprite()->setRotation(0);
+	}
+	else if (preRotate < 0)
+	{
+		this->player->getSprite()->setRotation(0);
+	}
 }
 
 void GameScene::initContactListener() {
@@ -95,20 +123,21 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 	if (nodeA && nodeB) {
 		/*nodeA->setColor(Color3B::BLACK);
 		nodeB->setColor(Color3B::BLACK);*/
-		if (nodeA->getTag() == (int)ContactType::Sword)
-		{
-			nodeA->removeFromParentAndCleanup(true);
-		}
-
 		Obstacles* entityA = GameManager::findObstacles((Sprite*)nodeA);
-		Obstacles* entityB = GameManager::findObstacles((Sprite*)nodeB);
+		Entity* entityB = GameManager::findEntity((Sprite*)nodeB);
 
-		if (instanceof<Obstacles>(entityA) && instanceof<Obstacles>(entityB)) {
+		if (instanceof<Obstacles>(entityA) && instanceof<Entity>(entityB)) {
 			float damageA = entityA->getDamage();
 			float damageB = entityB->getDamage();
 			entityA->takeDamage(damageB);
 			entityB->takeDamage(damageA);
 		}
+		else if (nodeA->getTag() == (int)ContactType::Sword || nodeA->getTag() == (int)ContactType::Bomb || nodeA->getTag() == (int)ContactType::Rock)
+		{
+			nodeA->removeFromParentAndCleanup(true);
+		}
+
+		
 		
 	}
 
@@ -130,41 +159,19 @@ void GameScene::initPlayerInfoUI() {
 	addChild(playerInfo);
 	playerInfo->setPosition(Vec2(50, 50) - GameManager::getVisibleSize() / 2);
 	
-	playerInfo->setCameraMask((unsigned short)this->cameraUI->getCameraFlag());
+	
 }
 
 void GameScene::updatePlayerInfo() {
 	
 }
 
-void GameScene::followPlayer() {
-	auto camera = getDefaultCamera();
-	auto targetPos = player->getSprite()->getPosition();
-	auto visibleSize = GameManager::getVisibleSize();
-	targetPos.x = clampf(targetPos.x, visibleSize.width / 2 - (BOUNDING_BOX.width - visibleSize.width) / 2,
-		visibleSize.width / 2 + (BOUNDING_BOX.width - visibleSize.width) / 2);
-	targetPos.y = clampf(targetPos.y, visibleSize.height / 2 - (BOUNDING_BOX.height - visibleSize.height) / 2,
-		visibleSize.height / 2 + (BOUNDING_BOX.height - visibleSize.height) / 2);
-	auto curPos = camera->getPosition();
-	curPos = curPos.lerp(targetPos, 0.1);
-	camera->setPosition(curPos);
-}
-
-void GameScene::initCameraUI() {
-	this->cameraUI = Camera::create();
-	this->cameraUI->setCameraFlag(CameraFlag::USER1);
-	addChild(this->cameraUI);
-
-	Vec3 eyePosOld = this->cameraUI->getPosition3D();
-	this->cameraUI->setPosition3D(Vec3(0, 0, eyePosOld.z));
-	this->cameraUI->lookAt(Vec3(0, 0, 0));
-}
 void GameScene::initYard(){
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto frontback = Sprite::create("Yard/yard.png");
-	frontback->setContentSize(Size(visibleSize.width, visibleSize.height* 0.1));
+	auto frontback = Sprite::create("Yard/foot.png");
+	frontback->setContentSize(Size(visibleSize.width, visibleSize.height*0.2));
 	frontback->setAnchorPoint(Vec2(0, 0));
 
 	//land body
@@ -179,28 +186,59 @@ void GameScene::initYard(){
 	//frontback->setTag((int)ContactType::Yard);
 	addChild(frontback);
 }
+void GameScene::initPauseMenu() {
+	ui::Button* btnPause = ui::Button::create("Button/btnPauseNormal.png", "Button/btnPauseSelected.png", "Button/btnPauseNormal.png");
+	btnPause->addTouchEventListener([&](Ref* sender, ui::Widget::TouchEventType type) {
+		switch (type) {
+		case ui::Widget::TouchEventType::BEGAN:
+			break;
+		case ui::Widget::TouchEventType::ENDED:
+			log("Pressed");
+			GameManager::pause();
+			scheduleOnce([](float dt) {
+				GameManager::resume();
+				}, 1, "resumeGame");
+			break;
+		default:
+			break;
+		}
+		});
 
-//void GameScene::initBackground() {
-//	auto visibleSize = Director::getInstance()->getVisibleSize();
-//	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-//	/*auto boundingBoxBorderLayer = LayerColor::create(Color4B(10, 10, 100, 255));
-//	boundingBoxBorderLayer->setContentSize(BOUNDING_BOX);
-//	boundingBoxBorderLayer->setPosition((boundingBoxBorderLayer->getContentSize() - GameManager::getVisibleSize()) / 2 * -1);
-//	addChild(boundingBoxBorderLayer);*/
-//
-//	/*auto boundingBoxInnerLayer = LayerColor::create(Color4B(10, 100, 10, 255));
-//	boundingBoxInnerLayer->setContentSize(BOUNDING_BOX - Size(20, 20));
-//	boundingBoxInnerLayer->setPosition((boundingBoxInnerLayer->getContentSize() - GameManager::getVisibleSize()) / 2 * -1);
-//	addChild(boundingBoxInnerLayer);*/
-//
-//
-//
-//	auto windowLayer = Sprite::create("galaxy3.jpg");
-//	//windowLayer->setContentSize(GameManager::getVisibleSize());
-//	windowLayer->setContentSize(Size(800, 800));
-//	windowLayer->setPosition(visibleSize*0.5);
-//
-//	addChild(windowLayer);
-//
-//	
-//}
+	float factor = 30; //GameManager::getVisibleSize().width / 16;
+	float xscale = factor / btnPause->getContentSize().width;
+	float yscale = factor / btnPause->getContentSize().height;
+	btnPause->setScale(xscale, yscale);
+	btnPause->setPosition(Vec2(50, GameManager::getVisibleSize().height - 50) - GameManager::getVisibleSize() / 2);
+	addChild(btnPause);
+	
+
+	/*auto followPlayer = Follow::create(player->getSprite(), Rect(0,
+		0, 1600, 1200));
+	runAction(followPlayer);*/
+}
+
+void GameScene::initBackground() {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+	/*auto boundingBoxBorderLayer = LayerColor::create(Color4B(10, 10, 100, 255));
+	boundingBoxBorderLayer->setContentSize(BOUNDING_BOX);
+	boundingBoxBorderLayer->setPosition((boundingBoxBorderLayer->getContentSize() - GameManager::getVisibleSize()) / 2 * -1);
+	addChild(boundingBoxBorderLayer);*/
+
+	/*auto boundingBoxInnerLayer = LayerColor::create(Color4B(10, 100, 10, 255));
+	boundingBoxInnerLayer->setContentSize(BOUNDING_BOX - Size(20, 20));
+	boundingBoxInnerLayer->setPosition((boundingBoxInnerLayer->getContentSize() - GameManager::getVisibleSize()) / 2 * -1);
+	addChild(boundingBoxInnerLayer);*/
+
+
+
+	auto windowLayer = Sprite::create("BackGround/BackGround.png");
+	windowLayer->setContentSize(GameManager::getVisibleSize());
+	//windowLayer->setContentSize(Size(visibleSize.width, visibleSize.height));
+	/*windowLayer->setPosition(visibleSize*0.5);*/
+	windowLayer->setAnchorPoint(Vec2(0, 0));
+
+	addChild(windowLayer);
+
+	
+}

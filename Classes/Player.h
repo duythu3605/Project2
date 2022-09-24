@@ -2,12 +2,12 @@
 #define __PLAYER_H__
 
 #include "cocos2d.h"
-#include "Obstacles.h"
+#include "Entity.h"
 
 
 USING_NS_CC;
 
-class Player : public Obstacles
+class Player : public Entity
 {
 private:
 	

@@ -14,7 +14,7 @@ Entity::Entity(const string& file) {
 	this->body = PhysicsBody::createBox(this->sprite->getContentSize());
 	this->body->setDynamic(false);
 	this->sprite->addComponent(body);
-	this->sprite->setTag((int)ContactType::None);
+	this->sprite->setTag((int)ContactType::NoneP);
 
 	this->init();
 }
@@ -66,7 +66,7 @@ Sprite* Entity::getSprite() {
 }
 
 void Entity::destroy() {
-	this->sprite->removeFromParentAndCleanup(true);
+	//this->sprite->removeFromParentAndCleanup(true);
 }
 
 

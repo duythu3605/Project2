@@ -10,7 +10,6 @@ Obstacles::Obstacles() {
 
 Obstacles::Obstacles(const string& file) {
 	this->sprite = Sprite::create(file);
-
 	this->body = PhysicsBody::createBox(this->sprite->getContentSize());
 	this->body->setDynamic(false);
 	this->sprite->addComponent(body);
@@ -57,6 +56,7 @@ void Obstacles::setDirection(Vec2 direction) {
 	this->body->setVelocity(direction * speed);
 }
 
+
 Vec2 Obstacles::getDirection() {
 	return this->direction;
 }
@@ -66,7 +66,7 @@ Sprite* Obstacles::getSprite() {
 }
 
 void Obstacles::destroy() {
-	//this->sprite->removeFromParentAndCleanup(true);
+	
 }
 
 

@@ -22,6 +22,8 @@ public:
 
 	enum Enemies {
 		Sword,
+		Bomb,
+		Rock,
 	};
 
 	Obstacles();
@@ -32,8 +34,10 @@ public:
 	virtual void destroy();
 	void setSpeed(float speed);
 	float getSpeed();
+	
 	void setDirection(Vec2 direction);
 	Vec2 getDirection();
+
 	Sprite* getSprite();
 	void setMaxHP(float hp);
 	float getMaxHP();

@@ -3,7 +3,7 @@
 
 USING_NS_CC;
 
-Player::Player() : Obstacles("Player/playertest.png") {
+Player::Player() : Entity("Player/player.png") {
 	this->sprite->removeComponent(this->body);
 	this->body = PhysicsBody::createBox(this->sprite->getContentSize() , PhysicsMaterial(1.0f, 0, 0));
 	this->body->setDynamic(true);
@@ -83,9 +83,6 @@ void Player::update(float dt) {
 		this->body->setGravityEnable(true);
 	}
 
-	if (newDirection.y > 0) {
-		CCLOG("len");
-	}
 }
 
 void Player::initEventListener() {		

@@ -3,6 +3,8 @@
 #include <ctime>
 //#include <math.h>
 #include "Sword.h"
+#include "Bomb.h"
+#include "Rock.h"
 
 #include "ClosingScene.h"
 #include "GameScene.h"
@@ -10,6 +12,7 @@
 USING_NS_CC;
 
 Scene* GameManager::world = NULL;
+	std::vector<Entity*> GameManager::entities;
 	std::vector<Obstacles*> GameManager::enemies;
 	std::vector<Obstacles*> GameManager::obstacles;
 bool GameManager::isPause = false;
@@ -52,23 +55,15 @@ void GameManager::start() {
 // Schedule spawn enemies
 	world->schedule([](float dt) {
 		spawnEnemies();
-		}, 5, "SpawnEnemies");
+		}, 2, "SpawnEnemies");
 	
 }
 
 void GameManager::spawnEnemies() {
-	int enemyMaxRand = 1;
+	int enemyMaxRand = 3;
 	int enemyMinRand = 0;
 	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
 
-	
-	
-	//int positionX = random(100, 800);
-	
-
-	//Vec2 direction = Vec2(positionX, 800);
-	//direction.normalize();
-	//const float padding = 0;
 	Vec2 position = Vec2 (random(100, 800),800);
 	
 
@@ -77,7 +72,12 @@ void GameManager::spawnEnemies() {
 	case Obstacles::Sword:
 		enemy = new Sword();
 		break;
-	
+	case Obstacles::Bomb:
+		enemy = new Bomb();
+		break;
+	case Obstacles::Rock:
+		enemy = new Rock();
+		break;
 	default:
 		enemy = new Sword();
 		break;
@@ -93,7 +93,7 @@ void GameManager::spawnEnemies() {
 
 void GameManager::update(float dt) {
 	if (isPause) {
-		//pauseGame();
+		pauseGame();
 		return;
 	}
 	player->update(dt);
@@ -111,11 +111,26 @@ void GameManager::addObstacles(Obstacles* obstacle) {
 		obstacles.push_back(obstacle);
 	}
 }
-
+void GameManager::addEntity(Entity* entity) {
+	auto foundEntity = std::find(entities.begin(), entities.end(), entity);
+	if (foundEntity == entities.end()) {
+		world->addChild(entity->getSprite());
+		entities.push_back(entity);
+	}
+}
 Obstacles* GameManager::findObstacles(Sprite* sprite) {
 	for (Obstacles* obstacle : obstacles) {
 		if (obstacle != NULL) {
 			if (obstacle->getSprite() == sprite) return obstacle;
+		}
+	}
+
+	return NULL;
+}
+Entity* GameManager::findEntity(Sprite* sprite) {
+	for (Entity* entity : entities) {
+		if (entity != NULL) {
+			if (entity->getSprite() == sprite) return entity;
 		}
 	}
 
@@ -147,7 +162,7 @@ void GameManager::pauseGame() {
 	}
 
 	// Pause game world
-	//world->pause();
+	world->pause();
 }
 
 void GameManager::resumeGame() {

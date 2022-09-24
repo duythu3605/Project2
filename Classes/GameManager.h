@@ -5,7 +5,7 @@
 #include "Constant.h"
 #include <vector>
 #include "Obstacles.h"
-//#include "Entity.h"
+#include "Entity.h"
 #include "Player.h"
 
 USING_NS_CC;
@@ -14,6 +14,7 @@ static class GameManager
 {
 private:
 	static Scene* world;
+	static std::vector<Entity*> entities;
 	static std::vector<Obstacles*> enemies;
 	static Player* player;
 	static std::vector<Obstacles*> obstacles;
@@ -31,8 +32,10 @@ public:
 	static Vec2 getVisibleOrigin();
 	static Player* getPlayer();
 	static void setPlayer(Player* player);
-	static void addObstacles(Obstacles* entity);
+	static void addEntity(Entity* entity);
+	static void addObstacles(Obstacles* obstacle);
 	static Obstacles* findObstacles(Sprite* sprite);
+	static Entity* findEntity(Sprite* sprite);
 	static void destroyObstacles(Obstacles* entity);
 
 	//static void destroyEnity(Entity* entity);

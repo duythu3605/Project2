@@ -7,10 +7,13 @@ USING_NS_CC;
 
 enum class ContactType {
 	None,
+	NoneP,
 	Obstacles,
 	Player,
 	Sword,
 	Yard,
+	Bomb,
+	Rock,
 
 	
 };
