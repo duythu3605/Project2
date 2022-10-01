@@ -7,7 +7,7 @@ USING_NS_CC;
 class ClosingScene : public Scene
 {
 public:
-	static Scene* createScene();
+	Scene* createScene();
 
 	virtual bool init();
 

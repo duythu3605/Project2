@@ -14,7 +14,6 @@ Obstacles::Obstacles(const string& file) {
 	this->body->setDynamic(false);
 	this->sprite->addComponent(body);
 	this->sprite->setTag((int)ContactType::None);
-
 	this->init();
 }
 
@@ -64,9 +63,14 @@ Vec2 Obstacles::getDirection() {
 Sprite* Obstacles::getSprite() {
 	return this->sprite;
 }
-
+Action* Obstacles::getAction() {
+	return this->action_move;
+}
+//void Obstacles::setAction(Action action) {
+//	this->action_move = action;
+//}
 void Obstacles::destroy() {
-	
+	this->sprite->removeFromParentAndCleanup(true);
 }
 
 

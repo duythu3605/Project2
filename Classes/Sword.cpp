@@ -19,7 +19,7 @@ Sword::~Sword() {
 
 void Sword::init()
 {
-	this->setSpeed(500);
+	this->setSpeed(100);
 	this->setDirection(Vec2::ZERO);
 	this->damage = 300;
 	this->maxHP = 10;

@@ -4,6 +4,7 @@
 #include "Constant.h"
 #include "ui/CocosGUI.h"
 #include "Obstacles.h"
+#include "Bomb.h"
 
 USING_NS_CC;
 
@@ -37,7 +38,7 @@ bool GameScene::init()
 	GameManager::start();
 
 	// Init physics
-	this->getPhysicsWorld()->setGravity(Vec2(0,-300));
+	this->getPhysicsWorld()->setGravity(Vec2(0,-1000));
 	this->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_NONE);
 
 	// Init contact listeners
@@ -51,6 +52,8 @@ bool GameScene::init()
 	GameManager::addEntity(player);
 	GameManager::setPlayer(player);
 
+
+	
 	//// Camera
 	this->initCameraUI();
 
@@ -59,6 +62,10 @@ bool GameScene::init()
 	this->initPauseMenu();
 	this->initPlayerInfoUI();
 	this->initYard();
+
+	//// Mark
+	this->initMarkUI();
+	
 
 	scheduleUpdate();
 	return true;
@@ -73,11 +80,12 @@ void GameScene::update(float dt) {
 	PrePosition();
 	PreRotation();
 	this->updatePlayerInfo();
-
-	
+	this->Time_req();
+	GameScene::setMark(std::to_string((int)GameScene::getTime_req()));
+	this->textMark->setString(GameScene::getMark());
 	GameManager::update(dt);
 }
-
+/// position player in scene
 void GameScene::PrePosition() {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	float x = visibleSize.width;
@@ -93,6 +101,8 @@ void GameScene::PrePosition() {
 		this->player->getSprite()->setPosition(newPosition);
 	}
 }
+
+// rotation player in Scene 
 void GameScene::PreRotation() {
 	float preRotate = this->player->getSprite()->getRotation();
 	if (preRotate > 0)
@@ -121,8 +131,7 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 	Node* nodeB = contact.getShapeB()->getBody()->getNode();
 
 	if (nodeA && nodeB) {
-		/*nodeA->setColor(Color3B::BLACK);
-		nodeB->setColor(Color3B::BLACK);*/
+		
 		Obstacles* entityA = GameManager::findObstacles((Sprite*)nodeA);
 		Entity* entityB = GameManager::findEntity((Sprite*)nodeB);
 
@@ -132,9 +141,12 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 			entityA->takeDamage(damageB);
 			entityB->takeDamage(damageA);
 		}
-		else if (nodeA->getTag() == (int)ContactType::Sword || nodeA->getTag() == (int)ContactType::Bomb || nodeA->getTag() == (int)ContactType::Rock)
+		else if (nodeA->getTag() == (int)ContactType::Sword || 
+			nodeA->getTag() == (int)ContactType::Bomb || 
+			nodeA->getTag() == (int)ContactType::Rock ||
+			nodeA->getTag() == (int)ContactType::SawBlade)
 		{
-			nodeA->removeFromParentAndCleanup(true);
+			GameManager::destroyObstacles(entityA);
 		}
 
 		
@@ -194,17 +206,17 @@ void GameScene::initPauseMenu() {
 			break;
 		case ui::Widget::TouchEventType::ENDED:
 			log("Pressed");
-			GameManager::pause();
 			scheduleOnce([](float dt) {
 				GameManager::resume();
-				}, 1, "resumeGame");
+				}, 5, "resumeGame");
+			GameManager::pause();
 			break;
 		default:
 			break;
 		}
 		});
 
-	float factor = 30; //GameManager::getVisibleSize().width / 16;
+	float factor = 30; 
 	float xscale = factor / btnPause->getContentSize().width;
 	float yscale = factor / btnPause->getContentSize().height;
 	btnPause->setScale(xscale, yscale);
@@ -212,13 +224,41 @@ void GameScene::initPauseMenu() {
 	addChild(btnPause);
 	btnPause->setCameraMask((unsigned int)this->cameraUI->getCameraFlag());
 
-	/*auto followPlayer = Follow::create(player->getSprite(), Rect(0,
-		0, 1600, 1200));
-	runAction(followPlayer);*/
 }
-//void GameScene::initMark() {
-//	
-//}
+void GameScene::Time_req() {
+	if (GameManager::isPause == false) {
+		this->time_req += cocos2d::Director::getInstance()->getDeltaTime();
+		GameScene::setTime_req(this->time_req);
+		float m = (int)GameScene::getTime_req();
+		//CCLOG("%f", m);
+		GameScene::level(m);
+		
+	}
+}
+void GameScene::setTime_req(float time) {
+	this->time = time;
+}
+float GameScene::getTime_req() {
+	return time;
+}
+void GameScene::setMark(string mark) {
+	this->mark = mark;
+}
+string GameScene::getMark() {
+	return mark;
+}
+
+void GameScene::initMarkUI() {
+	this->textMark = TextFieldTTF::create("0", "fonts/arial.ttf", 30);
+	float factor = 30; 
+	float xscale = factor / this->textMark->getContentSize().width;
+	float yscale = factor / this->textMark->getContentSize().height;
+	this->textMark->setScale(xscale, yscale);
+	this->textMark->setPosition(Vec2(900, GameManager::getVisibleSize().height - 50) - GameManager::getVisibleSize() / 2);
+	addChild(this->textMark);
+	this->textMark->setCameraMask((unsigned int)this->cameraUI->getCameraFlag());
+}
+
 void GameScene::initCameraUI() {
 	this->cameraUI = Camera::create();
 	this->cameraUI->setCameraFlag(CameraFlag::USER1);
@@ -231,25 +271,57 @@ void GameScene::initCameraUI() {
 void GameScene::initBackground() {
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
-	/*auto boundingBoxBorderLayer = LayerColor::create(Color4B(10, 10, 100, 255));
-	boundingBoxBorderLayer->setContentSize(BOUNDING_BOX);
-	boundingBoxBorderLayer->setPosition((boundingBoxBorderLayer->getContentSize() - GameManager::getVisibleSize()) / 2 * -1);
-	addChild(boundingBoxBorderLayer);*/
-
-	/*auto boundingBoxInnerLayer = LayerColor::create(Color4B(10, 100, 10, 255));
-	boundingBoxInnerLayer->setContentSize(BOUNDING_BOX - Size(20, 20));
-	boundingBoxInnerLayer->setPosition((boundingBoxInnerLayer->getContentSize() - GameManager::getVisibleSize()) / 2 * -1);
-	addChild(boundingBoxInnerLayer);*/
-
-
-
 	auto windowLayer = Sprite::create("BackGround/BackGround.png");
 	windowLayer->setContentSize(GameManager::getVisibleSize());
-	//windowLayer->setContentSize(Size(visibleSize.width, visibleSize.height));
-	/*windowLayer->setPosition(visibleSize*0.5);*/
 	windowLayer->setAnchorPoint(Vec2(0, 0));
 
-	addChild(windowLayer);
-
+	addChild(windowLayer);	
+}
+void GameScene::level(float time) {
 	
+	if (time >= 10 && time<=20) {
+		CCLOG("tang toc do list size: %d", GameManager::obstacles.size());
+		for (Obstacles *ob : GameManager::obstacles) {
+			if (ob != NULL) {
+				log("ob: %s", ob->getSprite()->getName().c_str());
+				ob->setSpeed(200);
+			}
+		}
+	}
+	else if (time > 20 && time < 40) {
+		CCLOG("tang toc do list size: %d", GameManager::obstacles.size());
+		for (Obstacles *ob : GameManager::obstacles) {
+			if (ob != NULL) {
+				log("ob: %s", ob->getSprite()->getName().c_str());
+				ob->setSpeed(300);
+			}
+		}
+	}
+	else if (time > 40 && time < 60) {
+		CCLOG("tang toc do list size: %d", GameManager::obstacles.size());
+		for (Obstacles *ob : GameManager::obstacles) {
+			if (ob != NULL) {
+				log("ob: %s", ob->getSprite()->getName().c_str());
+				ob->setSpeed(400);
+			}
+		}
+	}
+	else if (time > 60 && time < 80) {
+		CCLOG("tang toc do list size: %d", GameManager::obstacles.size());
+		for (Obstacles *ob : GameManager::obstacles) {
+			if (ob != NULL) {
+				log("ob: %s", ob->getSprite()->getName().c_str());
+				ob->setSpeed(500);
+			}
+		}
+	}
+	else if (time > 80 && time < 100) {
+		CCLOG("tang toc do list size: %d", GameManager::obstacles.size());
+		for (Obstacles *ob : GameManager::obstacles) {
+			if (ob != NULL) {
+				log("ob: %s", ob->getSprite()->getName().c_str());
+				ob->setSpeed(600);
+			}
+		}
+	}
 }

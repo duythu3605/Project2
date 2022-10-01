@@ -14,16 +14,19 @@ public:
 	float speed;
 	Vec2 direction;
 	PhysicsBody* body;
+	Action* action_move;
 
 	float maxHP;
 	float hp;
 	float damage;
+	
 
 
 	enum Enemies {
 		Sword,
 		Bomb,
 		Rock,
+		SawBlade,
 	};
 
 	Obstacles();
@@ -39,6 +42,8 @@ public:
 	Vec2 getDirection();
 
 	Sprite* getSprite();
+	void setAction(Action action);
+	Action* getAction();
 	void setMaxHP(float hp);
 	float getMaxHP();
 	void setHP(float hp);

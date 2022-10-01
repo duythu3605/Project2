@@ -30,7 +30,7 @@ void Player::init()
 	this->setSpeed(300);
 	this->setMaxHP(1);
 	this->setHP(1);
-	this->jumpFoc = 200;
+	this->jumpFoc = 500;
 	this->initEventListener();
 	
 }
@@ -38,8 +38,8 @@ void Player::init()
 void Player::takeDamage(float damage) {
 	this->hp -= damage;
 	if (this->hp <= 0) {
-		if (this->heart > 0) {
-			this->heart--;
+		if (this->hp > 0) {
+			this->hp--;
 			this->hp = this->maxHP;
 		}
 		else {
@@ -75,7 +75,7 @@ void Player::die() {
 
 void Player::update(float dt) {
 	auto newDirection = direction;
-	if (this->hp <= 0) {
+	if (this->hp == 0) {
 		this->die();
 	}	
 

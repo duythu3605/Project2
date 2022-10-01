@@ -29,14 +29,23 @@ bool ClosingScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto label = Label::createWithSystemFont("Game Over", "Arial", 30);
-	addChild(label);
-	label->setPosition(visibleSize / 2);
+	auto label_gameover = Label::createWithSystemFont("Game Over", "Arial", 30);
+	addChild(label_gameover);
+	label_gameover->setPosition(visibleSize.width/2 , visibleSize.height/1.2);
 
+	auto label_total = Label::createWithSystemFont("Total", "Arial", 20);
+	addChild(label_total);
+	label_total->setPosition(visibleSize.width / 2, visibleSize.height / 1.4);
+
+
+	//GameScene::setMark(std::to_string((int)GameScene::getTime_req()));
+	auto label_totalmark = Label::createWithSystemFont("0" , "Arial", 20);
+	addChild(label_totalmark);
+	label_totalmark->setPosition(visibleSize.width / 2, visibleSize.height / 1.5);
 	Vector<MenuItem*> menuItems = {
 		MenuItemLabel::create(Label::createWithSystemFont("Play Again", "Arial", 20)  , [=](Ref* sender) {
-		auto gameScene = GameScene::create();
-			Director::getInstance()->replaceScene(gameScene);
+		/*auto gameScene = GameScene::create();
+			Director::getInstance()->replaceScene(gameScene);*/
 			
 		}),
 		MenuItemLabel::create(Label::createWithSystemFont("Quit", "Arial", 20)  , [=](Ref* sender) {

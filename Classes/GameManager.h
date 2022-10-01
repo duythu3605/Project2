@@ -7,6 +7,7 @@
 #include "Obstacles.h"
 #include "Entity.h"
 #include "Player.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -14,14 +15,14 @@ static class GameManager
 {
 public:
 	static Scene* world;
-	static Scene* startscene;
-	static Scene* gamescene;
 	static std::vector<Entity*> entities;
 	static std::vector<Obstacles*> enemies;
 	static Player* player;
 	static std::vector<Obstacles*> obstacles;
 	static bool isPause;
-	static float mark;
+	static	GameScene*  mark;
+	
+	
 
 	static void pauseGame();
 	static void resumeGame();
@@ -31,8 +32,6 @@ public:
 
 	static void setWorld(Scene* world);
 	static Scene* getWorld();
-	static void setStart(Scene* start);
-	static Scene* getStart();
 	static Size getVisibleSize();
 	static Vec2 getVisibleOrigin();
 	static Player* getPlayer();
@@ -42,20 +41,24 @@ public:
 	static Obstacles* findObstacles(Sprite* sprite);
 	static Entity* findEntity(Sprite* sprite);
 	static void destroyObstacles(Obstacles* entity);
-	static void setMark(float time);
-	static float getMark();
+	
+	static void setMark(GameScene* mark);
+	static GameScene* getMark();
+	
 
 	//static void destroyEnity(Entity* entity);
 
 	static void spawnEnemies();
+	static void spawnRock();
+	static void spawnBomb();
+	static void spawnSawBlade();
 	static void start();
 	static void update(float dt);
 	static void end();
 	static void pause();
 	static void resume();
-	static void nextStage();
-	static void pushScene(Scene* gameScene);
-	static void popScene();
+	
+	
 
 };
 

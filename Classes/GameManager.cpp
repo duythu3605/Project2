@@ -5,6 +5,7 @@
 #include "Sword.h"
 #include "Bomb.h"
 #include "Rock.h"
+#include "SawBlade.h"
 #include "MainMenuScene.h"
 #include "ClosingScene.h"
 #include "GameScene.h"
@@ -51,6 +52,7 @@ Player* GameManager::getPlayer() {
 	return player;
 }
 
+
 void GameManager::start() {
 	srand(time(NULL));
 // Schedule spawn enemies
@@ -58,10 +60,20 @@ void GameManager::start() {
 		spawnEnemies();
 		}, 2, "SpawnEnemies");
 	
+	world->schedule([](float dt) {
+		spawnRock();
+		}, 5, "spawnRock");
+	world->schedule([](float dt) {
+		spawnBomb();
+		}, 3, "spawnBomb");
+	world->schedule([](float dt) {
+		spawnSawBlade();
+		}, 3, "spawnSawBlade");
+	
 }
 
 void GameManager::spawnEnemies() {
-	int enemyMaxRand = 3;
+	int enemyMaxRand = 1;
 	int enemyMinRand = 0;
 	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
 
@@ -73,12 +85,6 @@ void GameManager::spawnEnemies() {
 	case Obstacles::Sword:
 		enemy = new Sword();
 		break;
-	case Obstacles::Bomb:
-		enemy = new Bomb();
-		break;
-	case Obstacles::Rock:
-		enemy = new Rock();
-		break;
 	default:
 		enemy = new Sword();
 		break;
@@ -88,6 +94,99 @@ void GameManager::spawnEnemies() {
 	GameManager::world->addChild(enemy->getSprite());
 	enemy->init();
 	
+	enemies.push_back(enemy);
+	obstacles.push_back(enemy);
+}
+void GameManager::spawnRock() {
+	int enemyMaxRand = 1;
+	int enemyMinRand = 0;
+	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
+	Player* player = GameManager::getPlayer();
+	auto position_player = player->getSprite()->getPosition();
+	Vec2 position = Vec2(position_player.x, 800);
+
+
+	Obstacles* enemy = NULL;
+	switch (enemyType) {
+	
+	case Obstacles::Rock:
+		enemy = new Rock();
+		break;
+	default:
+		enemy = new Rock();
+		break;
+	}
+
+	enemy->getSprite()->setPosition(position);
+	GameManager::world->addChild(enemy->getSprite());
+	enemy->init();
+
+	enemies.push_back(enemy);
+	obstacles.push_back(enemy);
+}
+void GameManager::spawnBomb() {
+	int enemyMaxRand = 1;
+	int enemyMinRand = 0;
+	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
+	Player* player = GameManager::getPlayer();
+	auto position_player = player->getSprite()->getPosition();
+	Vec2 position = Vec2(position_player.x+100, 650);
+
+
+	Obstacles* enemy = NULL;
+	switch (enemyType) {
+
+	case Obstacles::Bomb:
+		enemy = new Bomb();
+		break;
+	default:
+		enemy = new Bomb();
+		break;
+	}
+
+	enemy->getSprite()->setPosition(position);
+	GameManager::world->addChild(enemy->getSprite());
+	enemy->init();
+
+	enemies.push_back(enemy);
+	obstacles.push_back(enemy);
+}
+
+void GameManager::spawnSawBlade() {
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	Vec2 origin = Director::getInstance()->getVisibleOrigin();
+
+	int enemyMaxRand = 1;
+	int enemyMinRand = 0;
+	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
+	Player* player = GameManager::getPlayer();
+	auto position_player = player->getSprite()->getPosition();
+	
+	Vec2 position ;
+
+	if (position_player.x > visibleSize.width / 2) {
+		position = Vec2(50, visibleSize.height*0.25);
+	}
+	else {
+		position = Vec2(visibleSize.width-50, visibleSize.height*0.25);
+	}
+
+
+	Obstacles* enemy = NULL;
+	switch (enemyType) {
+
+	case Obstacles::SawBlade:
+		enemy = new SawBlade();
+		break;
+	default:
+		enemy = new SawBlade();
+		break;
+	}
+
+	enemy->getSprite()->setPosition(position);
+	GameManager::world->addChild(enemy->getSprite());
+	enemy->init();
+
 	enemies.push_back(enemy);
 	obstacles.push_back(enemy);
 }
@@ -103,6 +202,7 @@ void GameManager::update(float dt) {
 			enemy->update(dt);
 		}
 	}
+	//this->time_req += cocos2d::Director::getInstance()->getDeltaTime;
 }
 
 void GameManager::addObstacles(Obstacles* obstacle) {
@@ -163,7 +263,7 @@ void GameManager::pauseGame() {
 	}
 
 	// Pause game world
-	world->pause();
+	//world->pause();
 }
 
 void GameManager::resumeGame() {
@@ -179,15 +279,7 @@ void GameManager::resumeGame() {
 
 	//world->resume();
 }
-//
-//void GameManager::setStart(Scene* start) {
-//	GameManager::startscene = start;
-//	Director::getInstance()->replaceScene(start);
-//}
-//
-//Scene* GameManager::getStart() {
-//	return GameManager::startscene;
-//}
+
 
 void GameManager::end() {
 	
@@ -198,22 +290,16 @@ void GameManager::end() {
 void GameManager::pause() {
 	isPause = true;
 }
-//
-//void GameManager::pushScene(Scene* gameScene) {
-//	Director::getInstance()->pushScene(gameScene);
-//}
-//void GameManager::popScene() {
-//	Director::getInstance()->popScene();
-//}
+
 void GameManager::resume() {
 	isPause = false;
 	resumeGame();
 }
 
-//void GameManager::setMark(float time) {
-//	mark = 0;
-//	mark = mark + time;
+//void GameManager::setMark(GameScene* mark) {
+//	GameManager::mark = mark;
 //}
-//float GameManager::getMark() {
+//GameScene* GameManager::getMark() {
 //	return mark;
 //}
+
