@@ -20,7 +20,8 @@ public:
 	static Player* player;
 	static std::vector<Obstacles*> obstacles;
 	static bool isPause;
-	static	GameScene*  mark;
+	static	float  mark;
+	static GameManager* getInstance();
 	
 	
 
@@ -42,8 +43,8 @@ public:
 	static Entity* findEntity(Sprite* sprite);
 	static void destroyObstacles(Obstacles* entity);
 	
-	static void setMark(GameScene* mark);
-	static GameScene* getMark();
+	/*void setMark(float mark);
+	float  getMark();*/
 	
 
 	//static void destroyEnity(Entity* entity);

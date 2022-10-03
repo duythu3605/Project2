@@ -1,6 +1,7 @@
 #include "ClosingScene.h"
 #include "GameScene.h"
 #include "MainMenuScene.h"
+#include"GameManager.h"
 
 USING_NS_CC;
 
@@ -37,6 +38,9 @@ bool ClosingScene::init()
 	addChild(label_total);
 	label_total->setPosition(visibleSize.width / 2, visibleSize.height / 1.4);
 
+	// getvalue mark from GameScene (use GameManager)
+	/*GameManager::getInstance()->getMark();
+	std::string v = std::to_string(GameManager::getInstance()->getMark());*/
 
 	//GameScene::setMark(std::to_string((int)GameScene::getTime_req()));
 	auto label_totalmark = Label::createWithSystemFont("0" , "Arial", 20);

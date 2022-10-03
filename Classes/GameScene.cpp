@@ -83,6 +83,7 @@ void GameScene::update(float dt) {
 	this->Time_req();
 	GameScene::setMark(std::to_string((int)GameScene::getTime_req()));
 	this->textMark->setString(GameScene::getMark());
+	/*GameManager::getInstance()->setMark(GameScene::getTime_req());*/
 	GameManager::update(dt);
 }
 /// position player in scene
@@ -182,7 +183,7 @@ void GameScene::initYard(){
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto frontback = Sprite::create("Yard/foot.png");
+	auto frontback = Sprite::create("Yard/yard1.png");
 	frontback->setContentSize(Size(visibleSize.width, visibleSize.height*0.2));
 	frontback->setAnchorPoint(Vec2(0, 0));
 

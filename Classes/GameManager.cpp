@@ -27,6 +27,11 @@ GameManager::GameManager() {
 GameManager::~GameManager() {
 
 }
+static  GameManager* getInstance()
+{
+	static GameManager *instance = new GameManager();
+	return instance;
+}
 
 void GameManager::setWorld(Scene* world) {
 	GameManager::world = world;
@@ -296,10 +301,10 @@ void GameManager::resume() {
 	resumeGame();
 }
 
-//void GameManager::setMark(GameScene* mark) {
-//	GameManager::mark = mark;
+//void GameManager::setMark(float mark) {
+//	this->mark = mark;
 //}
-//GameScene* GameManager::getMark() {
-//	return mark;
+//float GameManager::getMark() {
+//	return this->mark;
 //}
 

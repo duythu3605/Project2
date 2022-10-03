@@ -29,6 +29,13 @@ bool MainMenuScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
+	//Background
+	auto windowLayer = Sprite::create("BackGround/BackGroundStart.jpg");
+	windowLayer->setContentSize(GameManager::getVisibleSize());
+	windowLayer->setAnchorPoint(Vec2(0, 0));
+
+	addChild(windowLayer);
+
 	/*AudioEngine::preload("sounds/background.mp3", [&](bool isSuccess) {
 		log("Preload background.pm3 %s", isSuccess ? "Success" : "Failed");
 		if (isSuccess) {
@@ -38,7 +45,8 @@ bool MainMenuScene::init()
 
 	this->soundLabel = Label::createWithSystemFont(std::string("Sound: ") + std::string(this->soundOn ? "ON" : "OFF"), "Arial", 20);
 
-	Vector<MenuItem*> menuItems = {
+	/*Vector<MenuItem*> menuItems = {
+		
 		MenuItemLabel::create(Label::createWithSystemFont("Play", "Arial", 20)  , [=](Ref* sender) {
 			this->gameScene = GameScene::create();
 			Director::getInstance()->replaceScene(this->gameScene);
@@ -51,12 +59,28 @@ bool MainMenuScene::init()
 		MenuItemLabel::create(Label::createWithSystemFont("Quit", "Arial", 20)  , [=](Ref* sender) {
 			Director::getInstance()->end();
 		}),
+	};*/
+	
+	Vector<MenuItem*> menuItems = {
+		MenuItemImage::create("Button/btnPlay.jpg","Button/btnPlay.jpg",[&](Ref* sender) {
+			this->gameScene = GameScene::create();
+			Director::getInstance()->replaceScene(this->gameScene);
+		}),
+		MenuItemImage::create("Button/btnVolume.jpg","Button/btnVolume.jpg",[&](Ref* sender) {
+			
+		}),
+		MenuItemImage::create("Button/btnquit.jpg","Button/btnquit.jpg",[&](Ref* sender) {
+			Director::getInstance()->end();
+			
+		}),
 	};
 
 	auto menu = Menu::createWithArray(menuItems);
 	addChild(menu);
 	menu->alignItemsVertically();
-	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 2));
+	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 3));
+
+	
 
 	return true;
 }

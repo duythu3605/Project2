@@ -30,7 +30,7 @@ void Player::init()
 	this->setSpeed(300);
 	this->setMaxHP(1);
 	this->setHP(1);
-	this->jumpFoc = 500;
+	this->jumpFoc = 600;
 	this->initEventListener();
 	
 }
