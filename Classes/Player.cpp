@@ -12,14 +12,13 @@ Player::Player() : Entity("Player/player.png") {
 	this->body->setCategoryBitmask(PLAYER_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(PLAYER_COLLISION_BITMASK);
 	
-	//this->body = PhysicsBody::createBox(Size(50, 80), PhysicsMaterial(1.0f, 0, 0));
 	
 	this->init();
 
 }
 
 Player::~Player() {
-
+	
 }
 
 void Player::init()

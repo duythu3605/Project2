@@ -43,15 +43,17 @@ bool ClosingScene::init()
 	std::string v = std::to_string(GameManager::getInstance()->getMark());*/
 
 	//GameScene::setMark(std::to_string((int)GameScene::getTime_req()));
+
+	/*MenuItemLabel::create(Label::createWithSystemFont("Play Again", "Arial", 20), [=](Ref* sender) {
+		auto gameScene = GameScene::create();
+		Director::getInstance()->replaceScene(gameScene);
+
+		})*/
 	auto label_totalmark = Label::createWithSystemFont("0" , "Arial", 20);
 	addChild(label_totalmark);
 	label_totalmark->setPosition(visibleSize.width / 2, visibleSize.height / 1.5);
 	Vector<MenuItem*> menuItems = {
-		MenuItemLabel::create(Label::createWithSystemFont("Play Again", "Arial", 20)  , [=](Ref* sender) {
-		/*auto gameScene = GameScene::create();
-			Director::getInstance()->replaceScene(gameScene);*/
-			
-		}),
+		MenuItemLabel::create(Label::createWithSystemFont("Play Again", "Arial", 20)  ,CC_CALLBACK_1(ClosingScene::menuCloseCallBack,this)),
 		MenuItemLabel::create(Label::createWithSystemFont("Quit", "Arial", 20)  , [=](Ref* sender) {
 			Director::getInstance()->end();
 		}),
@@ -63,5 +65,11 @@ bool ClosingScene::init()
 	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 1.8));
 
 	return true;
+}
+
+void ClosingScene::menuCloseCallBack(Ref* pSender) {
+	GameManager::resetGame();
+	auto gameScene = GameScene::create();
+	Director::getInstance()->replaceScene(gameScene);
 }
 

@@ -13,7 +13,6 @@
 USING_NS_CC;
 
 Scene* GameManager::world = NULL;
-//Scene* GameManager::startscene = NULL;
 	std::vector<Entity*> GameManager::entities;
 	std::vector<Obstacles*> GameManager::enemies;
 	std::vector<Obstacles*> GameManager::obstacles;
@@ -301,6 +300,15 @@ void GameManager::resume() {
 	resumeGame();
 }
 
+void GameManager::resetGame() {
+	GameManager::world = GameScene::create();
+	GameManager::entities = {};
+	GameManager::enemies = {};
+	GameManager::obstacles = {};
+	GameManager::isPause = false;
+
+	GameManager::player = new Player();
+}
 //void GameManager::setMark(float mark) {
 //	this->mark = mark;
 //}

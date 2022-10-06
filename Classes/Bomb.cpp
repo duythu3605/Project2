@@ -26,7 +26,10 @@ void Bomb::init()
 	
 
 	Player* player = GameManager::getPlayer();
-	auto move = MoveBy::create(7-((int)this->getSpeed()/100), player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0,500));
+	/*auto move = MoveBy::create(7-((int)this->getSpeed()/100), player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0,500));*/
+	Vec2 a = player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0, 500);
+	float s = sqrt(((a.x)*(a.x) + (a.y)*(a.y)));
+	auto move = MoveBy::create((int)(s/this->getSpeed()), player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0, 500));
 	auto move_ease_in = EaseBackIn::create(move->clone());
 	auto seq1 = cocos2d::Sequence::create(move_ease_in, nullptr);
 	this->sprite->runAction(seq1);

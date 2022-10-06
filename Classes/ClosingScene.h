@@ -11,6 +11,8 @@ public:
 
 	virtual bool init();
 
+	void menuCloseCallBack(cocos2d::Ref* pSender);
+
 	// implement the "static create()" method manually
 	CREATE_FUNC(ClosingScene);
 };

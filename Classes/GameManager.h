@@ -27,6 +27,7 @@ public:
 
 	static void pauseGame();
 	static void resumeGame();
+	static void resetGame();
 
 	GameManager();
 	~GameManager();

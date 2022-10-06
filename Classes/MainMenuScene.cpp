@@ -77,7 +77,8 @@ bool MainMenuScene::init()
 
 	auto menu = Menu::createWithArray(menuItems);
 	addChild(menu);
-	menu->alignItemsVertically();
+	//menu->alignItemsVertically();
+	menu->alignItemsVerticallyWithPadding(20);
 	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 3));
 
 	

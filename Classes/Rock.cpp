@@ -30,7 +30,9 @@ void Rock::init()
 	auto position_player = player->getSprite()->getPosition();
 	auto position_rock = this->sprite->getPosition();
 	if (position_rock.y > position_player.y) {
-		auto move = MoveBy::create(7-((int)this->getSpeed()/100), player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0, 200));
+		Vec2 a = player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0, 200);
+		float s = sqrt(((a.x)*(a.x) + (a.y)*(a.y)));
+		auto move = MoveBy::create((int)(s / this->getSpeed()), player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0, 200));
 		this->sprite->runAction(move);
 	}
 	/*auto direct = player->getSprite()->getPosition() - this->sprite->getPosition();

@@ -46,11 +46,12 @@ bool GameScene::init()
 
 	// Init player
 	this->player = GameManager::getPlayer() ? GameManager::getPlayer() : new Player();
+	GameManager::addEntity(player);
+	GameManager::setPlayer(player);
 	this->player->getSprite()->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 5));
 	this->player->getSprite()->setLocalZOrder(1);
 	
-	GameManager::addEntity(player);
-	GameManager::setPlayer(player);
+	
 
 
 	
