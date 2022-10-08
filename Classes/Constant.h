@@ -15,6 +15,7 @@ enum class ContactType {
 	Bomb,
 	Rock,
 	SawBlade,
+	Heart,
 
 	
 };

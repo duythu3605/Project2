@@ -19,6 +19,7 @@ public:
 	float maxHP;
 	float hp;
 	float damage;
+	float heart;
 	
 
 
@@ -50,7 +51,10 @@ public:
 	float getHP();
 	void setDamage(float damage);
 	float getDamage();
+	void setHeart(float heart);
+	float getHeart();
 	virtual void takeDamage(float damage);
+	virtual void takeHeart(float heart);
 	void pause();
 	void resume();
 };

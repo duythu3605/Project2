@@ -78,9 +78,17 @@ void Obstacles::destroy() {
 float Obstacles::getDamage() {
 	return this->damage;
 }
+float Obstacles::getHeart() {
+	return this->heart;
+}
+
 
 void Obstacles::setDamage(float damage) {
 	this->damage = damage;
+}
+
+void Obstacles::setHeart(float heart) {
+	this->heart = heart;
 }
 
 void Obstacles::takeDamage(float damage) {
@@ -89,6 +97,13 @@ void Obstacles::takeDamage(float damage) {
 	if (this->hp <= 0) {
 		this->hp = 0;
 		//this->sprite->setVisible(false);
+		GameManager::destroyObstacles(this);
+	}
+}
+void Obstacles::takeHeart(float heart) {
+	this->hp -= heart;
+
+	if (this->hp <= 0) {
 		GameManager::destroyObstacles(this);
 	}
 }

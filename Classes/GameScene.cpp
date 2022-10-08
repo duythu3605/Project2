@@ -5,8 +5,10 @@
 #include "ui/CocosGUI.h"
 #include "Obstacles.h"
 #include "Bomb.h"
+#include"AudioEngine.h"
 
 USING_NS_CC;
+using namespace experimental;
 
 Scene* GameScene::createScene()
 {
@@ -23,6 +25,7 @@ static void problemLoading(const char* filename)
 // on "init" you need to initialize your instance
 bool GameScene::init()
 {
+	GameManager::resetGame();
 	//////////////////////////////
 	// 1. super init first
 	if (!Scene::initWithPhysics())
@@ -66,6 +69,10 @@ bool GameScene::init()
 
 	//// Mark
 	this->initMarkUI();
+
+	//Test audio 
+
+	
 	
 
 	scheduleUpdate();
@@ -78,6 +85,8 @@ Vec2 GameScene::getPositionP() {
 }
 
 void GameScene::update(float dt) {
+	
+	
 	PrePosition();
 	PreRotation();
 	this->updatePlayerInfo();
@@ -136,13 +145,21 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 		
 		Obstacles* entityA = GameManager::findObstacles((Sprite*)nodeA);
 		Entity* entityB = GameManager::findEntity((Sprite*)nodeB);
+		int sound_blood;
 
 		if (instanceof<Obstacles>(entityA) && instanceof<Entity>(entityB)) {
 			float damageA = entityA->getDamage();
 			float damageB = entityB->getDamage();
 			entityA->takeDamage(damageB);
 			entityB->takeDamage(damageA);
+			/*sound_blood = AudioEngine::play2d("Audio/background.mp3");*/
 		}
+		else if (nodeA->getTag() == (int)ContactType::Heart) {
+			float heartA = entityA->getDamage();
+			float heartB = entityB->getDamage();
+			//entityB->takeheart();
+		}
+		//AudioEngine::stop(sound_blood);
 		else if (nodeA->getTag() == (int)ContactType::Sword || 
 			nodeA->getTag() == (int)ContactType::Bomb || 
 			nodeA->getTag() == (int)ContactType::Rock ||

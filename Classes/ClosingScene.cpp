@@ -68,7 +68,6 @@ bool ClosingScene::init()
 }
 
 void ClosingScene::menuCloseCallBack(Ref* pSender) {
-	GameManager::resetGame();
 	auto gameScene = GameScene::create();
 	Director::getInstance()->replaceScene(gameScene);
 }

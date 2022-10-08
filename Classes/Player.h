@@ -24,6 +24,7 @@ public:
 	void init();
 	void update(float dt);
 	void takeDamage(float damage);
+	void takeHeart(float heart);
 	int getHeart();
 	void setHeart(int heart);
 	void die();

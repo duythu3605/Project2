@@ -1,8 +1,9 @@
 #include "Sword.h"
 #include "GameManager.h"
 #include "Player.h"
-
+#include "AudioEngine.h"
 USING_NS_CC;
+using namespace experimental;
 
 Sword::Sword() : Obstacles("Obstacles/sword.png") {
 	this->body->setContactTestBitmask(ENEMY_CONTACT_TEST_BITMASK);
@@ -29,6 +30,8 @@ void Sword::init()
 	auto direct = player->getSprite()->getPosition() - this->sprite->getPosition();
 	direct.normalize();
 	this->setDirection(direct);
+	int sound = AudioEngine::play2d("Audio/sound_sword.mp3", true);
+	AudioEngine::stop(sound);
 	
 }
 

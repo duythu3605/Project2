@@ -9,8 +9,12 @@
 #include "MainMenuScene.h"
 #include "ClosingScene.h"
 #include "GameScene.h"
+#include"AudioEngine.h"
+#include"AudioManager.h"
 
 USING_NS_CC;
+using namespace experimental;
+
 
 Scene* GameManager::world = NULL;
 	std::vector<Entity*> GameManager::entities;
@@ -60,38 +64,42 @@ Player* GameManager::getPlayer() {
 void GameManager::start() {
 	srand(time(NULL));
 // Schedule spawn enemies
+	
 	world->schedule([](float dt) {
-		spawnEnemies();
-		}, 2, "SpawnEnemies");
+		spawnSwords();
+		}, 2, "spawnSwords");
 	
 	world->schedule([](float dt) {
 		spawnRock();
-		}, 5, "spawnRock");
+		}, 12, "spawnRock");
 	world->schedule([](float dt) {
 		spawnBomb();
-		}, 3, "spawnBomb");
+		}, 8, "spawnBomb");
 	world->schedule([](float dt) {
 		spawnSawBlade();
-		}, 3, "spawnSawBlade");
+		}, 10, "spawnSawBlade");
 	
 }
 
-void GameManager::spawnEnemies() {
+void GameManager::spawnSwords() {
 	int enemyMaxRand = 1;
 	int enemyMinRand = 0;
 	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
 
 	Vec2 position = Vec2 (random(100, 800),800);
 	
-
+	//int sound_blood = AudioEngine::play2d("Audio/background.mp3");
+	AudioManager::set_idSoundSword("Audio/f2.mp3",false);
+	AudioManager::get_idSoundSword();
 	Obstacles* enemy = NULL;
 	switch (enemyType) {
 	case Obstacles::Sword:
-		enemy = new Sword();
+		enemy = new Sword();		
 		break;
 	default:
-		enemy = new Sword();
+		enemy = new Sword();		
 		break;
+		
 	}
 
 	enemy->getSprite()->setPosition(position);
@@ -301,13 +309,14 @@ void GameManager::resume() {
 }
 
 void GameManager::resetGame() {
-	GameManager::world = GameScene::create();
+
 	GameManager::entities = {};
 	GameManager::enemies = {};
 	GameManager::obstacles = {};
 	GameManager::isPause = false;
 
-	GameManager::player = new Player();
+	GameManager::player = NULL;
+
 }
 //void GameManager::setMark(float mark) {
 //	this->mark = mark;

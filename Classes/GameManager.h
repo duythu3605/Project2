@@ -20,8 +20,12 @@ public:
 	static Player* player;
 	static std::vector<Obstacles*> obstacles;
 	static bool isPause;
-	static	float  mark;
+	//static	float  mark;
 	static GameManager* getInstance();
+	/*static int id_sword_sound;
+	static int id_rock_sound;
+	static int id_sawblade_sound;
+	static int id_bomb_sound;*/
 	
 	
 
@@ -50,7 +54,7 @@ public:
 
 	//static void destroyEnity(Entity* entity);
 
-	static void spawnEnemies();
+	static void spawnSwords();
 	static void spawnRock();
 	static void spawnBomb();
 	static void spawnSawBlade();
