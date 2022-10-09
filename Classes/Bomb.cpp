@@ -4,7 +4,7 @@
 
 USING_NS_CC;
 
-Bomb::Bomb() : Obstacles("Obstacles/bomb.png") {
+Bomb::Bomb() : Obstacles("Obstacles/bomb2.png") {
 	this->body->setContactTestBitmask(ENEMY_CONTACT_TEST_BITMASK);
 	this->body->setCategoryBitmask(ENEMY_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(ENEMY_COLLISION_BITMASK);

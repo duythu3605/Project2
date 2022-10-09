@@ -49,14 +49,15 @@ void Player::takeDamage(float damage) {
 }
 void Player::takeHeart(float heart) {
 	this->heart += heart;
-	if (this->hp >= 1)
+	
+	/*if (this->hp >= 1)
 	{
 		if (this->heart >= 0) {
 			this->heart++;
 			this->hp = this->maxHP;
 		}
 	}
-	
+	*/
 	
 }
 

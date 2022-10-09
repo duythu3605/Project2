@@ -6,6 +6,7 @@
 #include "Obstacles.h"
 #include "Bomb.h"
 #include"AudioEngine.h"
+#include"AudioManager.h"
 
 USING_NS_CC;
 using namespace experimental;
@@ -54,6 +55,9 @@ bool GameScene::init()
 	this->player->getSprite()->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 5));
 	this->player->getSprite()->setLocalZOrder(1);
 	
+	//music background
+	AudioManager::set_idBG2("Audio/background4.mp3", true);
+	AudioManager::get_idBG2;
 	
 
 
@@ -158,21 +162,38 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 			entityA->takeDamage(damageB);
 			entityB->takeDamage(damageA);
 			GameManager::destroyObstacles(entityA);
-			/*sound_blood = AudioEngine::play2d("Audio/background.mp3");*/
+			AudioManager::set_idPain("Audio/pain.mp3", false);
+			AudioManager::get_idPain();
+			
 		}
+		
 		else if (nodeA->getTag() == (int)ContactType::Heart && instanceof<Entity>(entityB)) {
-			float heartA = entityA->getDamage();
-			float heartB = entityB->getDamage();
+			
 			GameManager::destroyObstacles(entityA);
-			entityB->takeHeart(heartA);
+			entityB->takeHeart_req(1.0f);
+			this->player->takeHeart(1.0f);
 		}
 		//AudioEngine::stop(sound_blood);
-		else if (nodeA->getTag() == (int)ContactType::Sword || 
-			nodeA->getTag() == (int)ContactType::Bomb || 
-			nodeA->getTag() == (int)ContactType::Rock ||
-			nodeA->getTag() == (int)ContactType::SawBlade )
+		else if (nodeA->getTag() == (int)ContactType::Sword )
 		{
 			GameManager::destroyObstacles(entityA);
+			AudioManager::set_idSoundSword_cut("Audio/Sword_cut.mp3", false);
+			AudioManager::get_idSoundSword_cut();
+		}
+		else if (nodeA->getTag() == (int)ContactType::Bomb) {
+			GameManager::destroyObstacles(entityA);
+			AudioManager::set_idBombExplo("Audio/Bomb_explo.mp3", false);
+			AudioManager::get_idBombExplo();
+		}
+		else if (nodeA->getTag() == (int)ContactType::Rock) {
+			GameManager::destroyObstacles(entityA);
+			AudioManager::set_idRockExplo("Audio/Rock_explo.mp3", false);
+			AudioManager::get_idRockExplo();
+		}
+		else if (nodeA->getTag() == (int)ContactType::SawBlade) {
+			GameManager::destroyObstacles(entityA);
+			AudioManager::set_idBombExplo("Audio/Humanscream.mp3", false);
+			AudioManager::get_idBombExplo();
 		}
 
 		

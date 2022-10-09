@@ -95,13 +95,8 @@ void Entity::takeDamage(float damage) {
 		this->hp = 0;
 	}
 }
-void Entity::takeHeart(float heart) {
+void Entity::takeHeart_req(float heart) {
 	this->heart += heart;
-	
-	if (this->heart <= 0)
-	{
-		this->heart = 0;
-	}
 }
 
 void Entity::setMaxHP(float maxHP) {

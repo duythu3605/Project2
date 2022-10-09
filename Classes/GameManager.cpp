@@ -66,9 +66,9 @@ void GameManager::start() {
 	srand(time(NULL));
 // Schedule spawn enemies
 	
-	/*world->schedule([](float dt) {
+	world->schedule([](float dt) {
 		spawnSwords();
-		}, 2, "spawnSwords");
+		}, 3, "spawnSwords");
 	
 	world->schedule([](float dt) {
 		spawnRock();
@@ -78,10 +78,10 @@ void GameManager::start() {
 		}, 8, "spawnBomb");
 	world->schedule([](float dt) {
 		spawnSawBlade();
-		}, 10, "spawnSawBlade");*/
+		}, 10, "spawnSawBlade");
 	world->schedule([](float dt) {
 		spawnHeart();
-		}, 1, "spawnHeart");
+		}, 15, "spawnHeart");
 	
 }
 
@@ -92,8 +92,8 @@ void GameManager::spawnSwords() {
 
 	Vec2 position = Vec2 (random(100, 800),800);
 	
-	//int sound_blood = AudioEngine::play2d("Audio/background.mp3");
-	AudioManager::set_idSoundSword("Audio/f2.mp3",false);
+	
+	AudioManager::set_idSoundSword("Audio/Sword_down.mp3",false);
 	AudioManager::get_idSoundSword();
 	Obstacles* enemy = NULL;
 	switch (enemyType) {
@@ -121,6 +121,8 @@ void GameManager::spawnRock() {
 	auto position_player = player->getSprite()->getPosition();
 	Vec2 position = Vec2(position_player.x, 800);
 
+	AudioManager::set_idRockDown("Audio/Rock_down.mp3", false);
+	AudioManager::get_idRockDown();
 
 	Obstacles* enemy = NULL;
 	switch (enemyType) {
@@ -141,6 +143,7 @@ void GameManager::spawnRock() {
 	obstacles.push_back(enemy);
 }
 void GameManager::spawnBomb() {
+
 	int enemyMaxRand = 1;
 	int enemyMinRand = 0;
 	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
@@ -148,6 +151,8 @@ void GameManager::spawnBomb() {
 	auto position_player = player->getSprite()->getPosition();
 	Vec2 position = Vec2(position_player.x+100, 650);
 
+	AudioManager::set_idBombDown("Audio/Bomb_down.mp3",false);
+	AudioManager::get_idBombDown();
 
 	Obstacles* enemy = NULL;
 	switch (enemyType) {
@@ -177,8 +182,10 @@ void GameManager::spawnSawBlade() {
 	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
 	Player* player = GameManager::getPlayer();
 	auto position_player = player->getSprite()->getPosition();
-	
 	Vec2 position ;
+
+	AudioManager::set_idSLDown("Audio/SawBlade_act.mp3", false);
+	AudioManager::get_idSLDown();
 
 	if (position_player.x > visibleSize.width / 2) {
 		position = Vec2(50, visibleSize.height*0.25);
@@ -305,6 +312,10 @@ void GameManager::pauseGame() {
 			obstacle->pause();
 		}
 	}
+	//pause sound
+	AudioManager::PauseSound();
+	
+	//AudioManager::PauseSound(AudioManager::get_idBombDown());
 
 	// Pause game world
 	//world->pause();
@@ -313,7 +324,7 @@ void GameManager::pauseGame() {
 void GameManager::resumeGame() {
 	// Resume Player
 	player->resume();
-
+	AudioManager::ResumeSound();
 	// Resume entities
 	for (Obstacles* obstacle : obstacles) {
 		if (obstacle != NULL) {
@@ -326,7 +337,7 @@ void GameManager::resumeGame() {
 
 
 void GameManager::end() {
-	
+	AudioManager::StopMusic(AudioManager::get_idBG2());
 	auto closingScene = ClosingScene::create();
 	Director::getInstance()->replaceScene(closingScene);
 }

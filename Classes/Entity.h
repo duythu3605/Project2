@@ -49,7 +49,7 @@ public:
 	void setDamage(float damage);
 	float getDamage();
 	virtual void takeDamage(float damage);
-	virtual void takeHeart(float heart);
+	virtual void takeHeart_req(float heart);
 	void pause();
 	void resume();
 };

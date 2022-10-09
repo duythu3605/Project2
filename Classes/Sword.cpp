@@ -5,7 +5,7 @@
 USING_NS_CC;
 using namespace experimental;
 
-Sword::Sword() : Obstacles("Obstacles/sword.png") {
+Sword::Sword() : Obstacles("Obstacles/sword1.jpg") {
 	this->body->setContactTestBitmask(ENEMY_CONTACT_TEST_BITMASK);
 	this->body->setCategoryBitmask(ENEMY_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(ENEMY_COLLISION_BITMASK);

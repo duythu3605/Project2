@@ -4,7 +4,7 @@
 
 USING_NS_CC;
 
-Rock::Rock() : Obstacles("Obstacles/rock.jpg") {
+Rock::Rock() : Obstacles("Obstacles/stone2.png") {
 	this->body->setContactTestBitmask(ENEMY_CONTACT_TEST_BITMASK);
 	this->body->setCategoryBitmask(ENEMY_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(ENEMY_COLLISION_BITMASK);
@@ -32,7 +32,7 @@ void Rock::init()
 	if (position_rock.y > position_player.y) {
 		Vec2 a = player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0, 200);
 		float s = sqrt(((a.x)*(a.x) + (a.y)*(a.y)));
-		auto move = MoveBy::create((int)(s / this->getSpeed()), player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0, 200));
+		auto move = MoveBy::create((int)(s / this->getSpeed()), player->getSprite()->getPosition() - this->sprite->getPosition() - Vec2(0, 500));
 		this->sprite->runAction(move);
 	}
 	/*auto direct = player->getSprite()->getPosition() - this->sprite->getPosition();
