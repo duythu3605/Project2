@@ -58,6 +58,7 @@ public:
 	static void spawnRock();
 	static void spawnBomb();
 	static void spawnSawBlade();
+	static void spawnHeart();
 	static void start();
 	static void update(float dt);
 	static void end();

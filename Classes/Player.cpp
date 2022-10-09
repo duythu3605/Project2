@@ -25,7 +25,8 @@ void Player::init()
 {
 
 	this->damage = 1;
-	this->heart = 3;
+	this->heart = 2;
+	this->maxHeart = 2;
 	this->setSpeed(300);
 	this->setMaxHP(1);
 	this->setHP(1);
@@ -37,8 +38,8 @@ void Player::init()
 void Player::takeDamage(float damage) {
 	this->hp -= damage;
 	if (this->hp <= 0) {
-		if (this->hp > 0) {
-			this->hp--;
+		if (this->heart > 0) {
+			this->heart--;
 			this->hp = this->maxHP;
 		}
 		else {
@@ -48,11 +49,15 @@ void Player::takeDamage(float damage) {
 }
 void Player::takeHeart(float heart) {
 	this->heart += heart;
-
-	if (this->hp <= 0) {
-		this->heart--;
-		this->hp = 1;
+	if (this->hp >= 1)
+	{
+		if (this->heart >= 0) {
+			this->heart++;
+			this->hp = this->maxHP;
+		}
 	}
+	
+	
 }
 
 void Player::Jump() {

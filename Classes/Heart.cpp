@@ -9,6 +9,7 @@ Heart::Heart() : Obstacles("Obstacles/heart.png") {
 	this->body->setCategoryBitmask(ENEMY_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(ENEMY_COLLISION_BITMASK);
 	this->sprite->setTag((int)ContactType::Heart);
+	this->sprite->setScale(0.2, 0.2);
 	
 }
 
@@ -20,7 +21,7 @@ void Heart::init()
 {
 	this->setSpeed(300);
 	this->setDirection(Vec2::ZERO);
-	this->damage = 300;
+	this->heart = 1;
 	this->maxHP = 10;
 	this->hp = 10;
 	

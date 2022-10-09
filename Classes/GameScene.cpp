@@ -69,6 +69,8 @@ bool GameScene::init()
 
 	//// Mark
 	this->initMarkUI();
+	//Heart
+	this->initHeartUI();
 
 	//Test audio 
 
@@ -91,9 +93,12 @@ void GameScene::update(float dt) {
 	PreRotation();
 	this->updatePlayerInfo();
 	this->Time_req();
+	//update mark
 	GameScene::setMark(std::to_string((int)GameScene::getTime_req()));
 	this->textMark->setString(GameScene::getMark());
-	/*GameManager::getInstance()->setMark(GameScene::getTime_req());*/
+	//update heart
+	GameScene::setHeartUI(std::to_string((int)(this->player->getHeart())));
+	this->textHeart->setString(GameScene::getHeartUI());
 	GameManager::update(dt);
 }
 /// position player in scene
@@ -152,18 +157,20 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 			float damageB = entityB->getDamage();
 			entityA->takeDamage(damageB);
 			entityB->takeDamage(damageA);
+			GameManager::destroyObstacles(entityA);
 			/*sound_blood = AudioEngine::play2d("Audio/background.mp3");*/
 		}
-		else if (nodeA->getTag() == (int)ContactType::Heart) {
+		else if (nodeA->getTag() == (int)ContactType::Heart && instanceof<Entity>(entityB)) {
 			float heartA = entityA->getDamage();
 			float heartB = entityB->getDamage();
-			//entityB->takeheart();
+			GameManager::destroyObstacles(entityA);
+			entityB->takeHeart(heartA);
 		}
 		//AudioEngine::stop(sound_blood);
 		else if (nodeA->getTag() == (int)ContactType::Sword || 
 			nodeA->getTag() == (int)ContactType::Bomb || 
 			nodeA->getTag() == (int)ContactType::Rock ||
-			nodeA->getTag() == (int)ContactType::SawBlade)
+			nodeA->getTag() == (int)ContactType::SawBlade )
 		{
 			GameManager::destroyObstacles(entityA);
 		}
@@ -267,15 +274,58 @@ string GameScene::getMark() {
 	return mark;
 }
 
+
 void GameScene::initMarkUI() {
 	this->textMark = TextFieldTTF::create("0", "fonts/arial.ttf", 30);
+	auto text_time = TextFieldTTF::create("Time: ", "fonts/arial.ttf", 30);
 	float factor = 30; 
 	float xscale = factor / this->textMark->getContentSize().width;
 	float yscale = factor / this->textMark->getContentSize().height;
 	this->textMark->setScale(xscale, yscale);
+	text_time->setScale(xscale, yscale);
+	text_time->setPosition(Vec2(800, GameManager::getVisibleSize().height - 50) - GameManager::getVisibleSize() / 2);
 	this->textMark->setPosition(Vec2(900, GameManager::getVisibleSize().height - 50) - GameManager::getVisibleSize() / 2);
 	addChild(this->textMark);
+	addChild(text_time);
+	text_time->setCameraMask((unsigned int)this->cameraUI->getCameraFlag());
 	this->textMark->setCameraMask((unsigned int)this->cameraUI->getCameraFlag());
+}
+
+
+void GameScene::Heart_req() {
+	if (GameManager::isPause == false) {
+		this->heart_req = this->player->getHeart();
+		GameScene::setHeart_req(this->heart_req);
+
+	}
+}
+void GameScene::setHeart_req(int heart) {
+	this->heart_req = heart;
+}
+int GameScene::getHeart_req() {
+	return heart_req;
+}
+void GameScene::setHeartUI(string heart) {
+	this->heart = heart;
+}
+string GameScene::getHeartUI() {
+	return heart;
+}
+void GameScene::initHeartUI(){
+	int  h = this->player->getHeart();
+	auto img_heart = Sprite::create("Obstacles/heart.png");
+	this->textHeart = TextFieldTTF::create(std::to_string(h), "fonts/arial.ttf", 30);
+	float factor = 30;
+	float xscale = factor / this->textHeart->getContentSize().width;
+	float yscale = factor / this->textHeart->getContentSize().height;
+	this->textHeart->setScale(xscale, yscale);
+	img_heart->setScale(0.2, 0.2);
+	img_heart->setPosition(Vec2(100, GameManager::getVisibleSize().height - 50) - GameManager::getVisibleSize() / 2);
+	this->textHeart->setPosition(Vec2(150,GameManager::getVisibleSize().height - 50) - GameManager::getVisibleSize() / 2);
+	addChild(this->textHeart);
+	addChild(img_heart);
+	img_heart->setCameraMask((unsigned int)this->cameraUI->getCameraFlag());
+	this->textHeart->setCameraMask((unsigned int)this->cameraUI->getCameraFlag());
 }
 
 void GameScene::initCameraUI() {

@@ -28,6 +28,7 @@ void Obstacles::init()
 	this->maxHP = 0;
 	this->hp = 0;
 	this->damage = 0;
+	this->heart = 0;
 }
 
 void Obstacles::update(float dt) {
@@ -102,10 +103,8 @@ void Obstacles::takeDamage(float damage) {
 }
 void Obstacles::takeHeart(float heart) {
 	this->hp -= heart;
-
-	if (this->hp <= 0) {
-		GameManager::destroyObstacles(this);
-	}
+	GameManager::destroyObstacles(this);
+	
 }
 
 void Obstacles::setMaxHP(float maxHP) {

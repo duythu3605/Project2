@@ -18,6 +18,8 @@ protected:
 	float maxHP;
 	float hp;
 	float damage;
+	float heart;
+	float maxHeart;
 	
 
 public:
@@ -40,9 +42,14 @@ public:
 	float getMaxHP();
 	void setHP(float hp);
 	float getHP();
+	float getHeart();
+	void setHeart(float heart);
+	float getMaxheart();
+	void setMaxheart(float heart);
 	void setDamage(float damage);
 	float getDamage();
 	virtual void takeDamage(float damage);
+	virtual void takeHeart(float heart);
 	void pause();
 	void resume();
 };

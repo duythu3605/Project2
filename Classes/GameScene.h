@@ -14,9 +14,12 @@ public:
 	Vec2 position;
 	float time_req = 0;
 	float time;
+	int heart_req = 0;
 	string mark;
 	Label* textMark;
-	string textchance;
+	string heart;
+	Label* textHeart;
+	
 
 	bool onContactBegin(PhysicsContact& contact);
 	void onContactSeparate(PhysicsContact& contact);
@@ -37,6 +40,12 @@ public:
 	void setMark(string mark);
 	string getMark();
 	void initMarkUI();
+	void Heart_req();
+	void setHeart_req(int heart_req);
+	int getHeart_req();
+	void setHeartUI(string heart);
+	string getHeartUI();
+	void initHeartUI();
 	void level(float time);
 	
 	

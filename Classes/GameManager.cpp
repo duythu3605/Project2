@@ -6,6 +6,7 @@
 #include "Bomb.h"
 #include "Rock.h"
 #include "SawBlade.h"
+#include "Heart.h"
 #include "MainMenuScene.h"
 #include "ClosingScene.h"
 #include "GameScene.h"
@@ -65,7 +66,7 @@ void GameManager::start() {
 	srand(time(NULL));
 // Schedule spawn enemies
 	
-	world->schedule([](float dt) {
+	/*world->schedule([](float dt) {
 		spawnSwords();
 		}, 2, "spawnSwords");
 	
@@ -77,7 +78,10 @@ void GameManager::start() {
 		}, 8, "spawnBomb");
 	world->schedule([](float dt) {
 		spawnSawBlade();
-		}, 10, "spawnSawBlade");
+		}, 10, "spawnSawBlade");*/
+	world->schedule([](float dt) {
+		spawnHeart();
+		}, 1, "spawnHeart");
 	
 }
 
@@ -192,6 +196,34 @@ void GameManager::spawnSawBlade() {
 		break;
 	default:
 		enemy = new SawBlade();
+		break;
+	}
+
+	enemy->getSprite()->setPosition(position);
+	GameManager::world->addChild(enemy->getSprite());
+	enemy->init();
+
+	enemies.push_back(enemy);
+	obstacles.push_back(enemy);
+}
+
+void GameManager::spawnHeart() {
+	int enemyMaxRand = 1;
+	int enemyMinRand = 0;
+	int enemyType = rand() % (enemyMaxRand - enemyMinRand + 1) + enemyMinRand;
+	Player* player = GameManager::getPlayer();
+	auto position_player = player->getSprite()->getPosition();
+	Vec2 position = Vec2(position_player.x, 800);
+
+
+	Obstacles* enemy = NULL;
+	switch (enemyType) {
+
+	case Obstacles::Heart:
+		enemy = new Heart();
+		break;
+	default:
+		enemy = new Heart();
 		break;
 	}
 

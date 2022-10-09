@@ -30,6 +30,8 @@ void Entity::init()
 	this->maxHP = 0;
 	this->hp = 0;
 	this->damage = 0;
+	this->heart = 0;
+	this->maxHeart = 0;
 }
 
 void Entity::update(float dt) {
@@ -50,6 +52,13 @@ float Entity::getHP() {
 
 void Entity::setHP(float hp) {
 	this->hp = hp;
+}
+
+float Entity::getHeart() {
+	return this->heart;
+}
+void Entity::setHeart(float heart) {
+	this->heart = heart;
 }
 
 void Entity::setDirection(Vec2 direction) {
@@ -84,8 +93,14 @@ void Entity::takeDamage(float damage) {
 
 	if (this->hp <= 0) {
 		this->hp = 0;
-		//this->sprite->setVisible(false);
-		//GameManager::destroyObstacles(this);
+	}
+}
+void Entity::takeHeart(float heart) {
+	this->heart += heart;
+	
+	if (this->heart <= 0)
+	{
+		this->heart = 0;
 	}
 }
 
@@ -96,7 +111,12 @@ void Entity::setMaxHP(float maxHP) {
 float Entity::getMaxHP() {
 	return this->maxHP;
 }
-
+void Entity::setMaxheart(float maxHeart) {
+	this->maxHeart = maxHeart;
+}
+float Entity::getMaxheart() {
+	return this->maxHeart;
+}
 
 void Entity::pause() {
 	this->body->setVelocity(Vec2::ZERO);

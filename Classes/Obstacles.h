@@ -28,6 +28,7 @@ public:
 		Bomb,
 		Rock,
 		SawBlade,
+		Heart,
 	};
 
 	Obstacles();
