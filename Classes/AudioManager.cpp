@@ -132,3 +132,4 @@ void AudioManager::PauseSound() {
 void AudioManager::ResumeSound() {
 	AudioEngine::resumeAll();
 }
+

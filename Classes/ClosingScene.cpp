@@ -30,45 +30,57 @@ bool ClosingScene::init()
 	auto visibleSize = Director::getInstance()->getVisibleSize();
 	Vec2 origin = Director::getInstance()->getVisibleOrigin();
 
-	auto label_gameover = Label::createWithSystemFont("Game Over", "Arial", 30);
-	addChild(label_gameover);
-	label_gameover->setPosition(visibleSize.width/2 , visibleSize.height/1.2);
+	// back ground
+	auto windowLayer = Sprite::create("BackGround/BackGround.png");
+	windowLayer->setContentSize(GameManager::getVisibleSize());
+	windowLayer->setAnchorPoint(Vec2(0, 0));
+	addChild(windowLayer);
+	// Label
+	auto pic_gameover = Sprite::create("Button/youdie.png");	
+	addChild(pic_gameover);
+	pic_gameover->setPosition(visibleSize.width/2 , visibleSize.height/1.2);
 
-	auto label_total = Label::createWithSystemFont("Total", "Arial", 20);
-	addChild(label_total);
-	label_total->setPosition(visibleSize.width / 2, visibleSize.height / 1.4);
+	auto pic_score = Sprite::create("Button/score.png");
+	pic_score->setScale(0.7f);
+	addChild(pic_score);
+	pic_score->setPosition(visibleSize.width / 2, visibleSize.height / 1.4);
 
-	// getvalue mark from GameScene (use GameManager)
-	/*GameManager::getInstance()->getMark();
-	std::string v = std::to_string(GameManager::getInstance()->getMark());*/
-
-	//GameScene::setMark(std::to_string((int)GameScene::getTime_req()));
-
-	/*MenuItemLabel::create(Label::createWithSystemFont("Play Again", "Arial", 20), [=](Ref* sender) {
-		auto gameScene = GameScene::create();
-		Director::getInstance()->replaceScene(gameScene);
-
-		})*/
-	auto label_totalmark = Label::createWithSystemFont("0" , "Arial", 20);
+	// getvalue mark from GameScene 
+	
+	string n = std::to_string((int)GameManager::getMark());
+	auto label_totalmark = Label::createWithSystemFont(n , "Arial", 40);
+	label_totalmark->setColor(Color3B::BLACK);
 	addChild(label_totalmark);
-	label_totalmark->setPosition(visibleSize.width / 2, visibleSize.height / 1.5);
-	Vector<MenuItem*> menuItems = {
+	label_totalmark->setPosition(visibleSize.width / 2, visibleSize.height / 1.65);
+
+
+	/*Vector<MenuItem*> menuItems = {
 		MenuItemLabel::create(Label::createWithSystemFont("Play Again", "Arial", 20)  ,CC_CALLBACK_1(ClosingScene::menuCloseCallBack,this)),
 		MenuItemLabel::create(Label::createWithSystemFont("Quit", "Arial", 20)  , [=](Ref* sender) {
 			Director::getInstance()->end();
 		}),
-	};
+	};*/
 
+	Vector<MenuItem*> menuItems = {
+		MenuItemImage::create("Button/btnplay.png","Button/btnplay_pressed.png",[&](Ref* sender) {
+			auto gameScene = GameScene::create();
+		Director::getInstance()->replaceScene(gameScene);
+		}),
+		MenuItemImage::create("Button/btnquit.png","Button/btnquit_pressed.png",[&](Ref* sender) {
+			Director::getInstance()->end();
+
+		}),
+	};
 	auto menu = Menu::createWithArray(menuItems);
 	addChild(menu);
-	menu->alignItemsVertically();
-	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 1.8));
+	menu->alignItemsVerticallyWithPadding(20);
+	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 3));
 
 	return true;
 }
-
-void ClosingScene::menuCloseCallBack(Ref* pSender) {
-	auto gameScene = GameScene::create();
-	Director::getInstance()->replaceScene(gameScene);
-}
+//
+//void ClosingScene::menuCloseCallBack(Ref* pSender) {
+//	auto gameScene = GameScene::create();
+//	Director::getInstance()->replaceScene(gameScene);
+//}
 

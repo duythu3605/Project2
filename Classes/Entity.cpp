@@ -54,7 +54,7 @@ void Entity::setHP(float hp) {
 	this->hp = hp;
 }
 
-float Entity::getHeart() {
+int Entity::getHeart() {
 	return this->heart;
 }
 void Entity::setHeart(float heart) {
@@ -93,6 +93,7 @@ void Entity::takeDamage(float damage) {
 
 	if (this->hp <= 0) {
 		this->hp = 0;
+		GameManager::destroyEntity(this);
 	}
 }
 void Entity::takeHeart_req(float heart) {

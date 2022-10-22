@@ -5,6 +5,18 @@
 
 USING_NS_CC;
 
+class Collidable {
+public:
+	virtual void takeDamage(float damage) {
+
+	}
+
+	virtual float getDamage() {
+		return 0;
+	}
+
+};
+
 enum class ContactType {
 	None,
 	NoneP,

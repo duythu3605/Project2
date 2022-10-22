@@ -99,6 +99,7 @@ void GameScene::update(float dt) {
 	this->Time_req();
 	//update mark
 	GameScene::setMark(std::to_string((int)GameScene::getTime_req()));
+	GameManager::setMark(GameScene::getTime_req());
 	this->textMark->setString(GameScene::getMark());
 	//update heart
 	GameScene::setHeartUI(std::to_string((int)(this->player->getHeart())));
@@ -152,46 +153,59 @@ bool GameScene::onContactBegin(PhysicsContact& contact) {
 
 	if (nodeA && nodeB) {
 		
-		Obstacles* entityA = GameManager::findObstacles((Sprite*)nodeA);
-		Entity* entityB = GameManager::findEntity((Sprite*)nodeB);
-		int sound_blood;
+		Entity* entityA = GameManager::findObstacles((Sprite*)nodeA);
+		if (entityA == NULL) {
+			entityA = GameManager::findEntity((Sprite*)nodeA);
+		}
+		/*Entity* entityB = GameManager::findEntity((Sprite*)nodeA);*/
+/*
+		auto entityA = _oA ? _oA : _oB;*/
 
-		if (instanceof<Obstacles>(entityA) && instanceof<Entity>(entityB)) {
+		Entity* entityB = GameManager::findEntity((Sprite*)nodeB);
+		if (entityB == NULL) {
+			entityB = GameManager::findObstacles((Sprite*)nodeB);
+		}
+		//Entity* entityA = GameManager::findObstacles((Sprite*)nodeA);
+		/*Entity* entityA = GameManager::findEntity((Sprite*)nodeA);
+		Entity* entityB = GameManager::findEntity((Sprite*)nodeB);*/
+
+		if (instanceof<Entity>(entityA) && instanceof<Entity>(entityB) ){
 			float damageA = entityA->getDamage();
 			float damageB = entityB->getDamage();
 			entityA->takeDamage(damageB);
 			entityB->takeDamage(damageA);
-			GameManager::destroyObstacles(entityA);
+			//GameManager::destroyObstacles(entityA);
 			AudioManager::set_idPain("Audio/pain.mp3", false);
 			AudioManager::get_idPain();
 			
+			
 		}
 		
-		else if (nodeA->getTag() == (int)ContactType::Heart && instanceof<Entity>(entityB)) {
-			
-			GameManager::destroyObstacles(entityA);
-			entityB->takeHeart_req(1.0f);
-			this->player->takeHeart(1.0f);
-		}
+		//else if (nodeA->getTag() == (int)ContactType::Heart && instanceof<Entity>(entityB)) {
+		//	
+		//	GameManager::destroyObstacles(entityA);
+		//	//entityB->takeHeart_req(1.0f);
+		//	this->player->takeHeart(1.0f);
+		//}
 		//AudioEngine::stop(sound_blood);
 		else if (nodeA->getTag() == (int)ContactType::Sword )
 		{
-			GameManager::destroyObstacles(entityA);
+			//GameManager::destroyObstacles((Obstacles*) entityA);
 			AudioManager::set_idSoundSword_cut("Audio/Sword_cut.mp3", false);
 			AudioManager::get_idSoundSword_cut();
 		}
 		else if (nodeA->getTag() == (int)ContactType::Bomb) {
-			GameManager::destroyObstacles(entityA);
+			//GameManager::destroyObstacles((Obstacles*) entityA);
 			AudioManager::set_idBombExplo("Audio/Bomb_explo.mp3", false);
 			AudioManager::get_idBombExplo();
 		}
 		else if (nodeA->getTag() == (int)ContactType::Rock) {
-			GameManager::destroyObstacles(entityA);
+			//GameManager::destroyObstacles((Obstacles*) entityA);
 			AudioManager::set_idRockExplo("Audio/Rock_explo.mp3", false);
 			AudioManager::get_idRockExplo();
 		}
 		else if (nodeA->getTag() == (int)ContactType::SawBlade) {
-			GameManager::destroyObstacles(entityA);
+			//GameManager::destroyObstacles((Obstacles*) entityA);
 			AudioManager::set_idBombExplo("Audio/Humanscream.mp3", false);
 			AudioManager::get_idBombExplo();
 		}

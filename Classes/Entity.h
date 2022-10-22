@@ -6,9 +6,9 @@
 USING_NS_CC;
 using namespace std;
 
-class Entity
+class Entity 
 {
-private:
+
 protected:
 	Sprite* sprite;
 	float speed;
@@ -33,21 +33,21 @@ public:
 	virtual void init();
 	virtual void update(float dt);
 	virtual void destroy();
-	void setSpeed(float speed);
-	float getSpeed();
-	void setDirection(Vec2 direction);
-	Vec2 getDirection();
-	Sprite* getSprite();
-	void setMaxHP(float hp);
-	float getMaxHP();
-	void setHP(float hp);
-	float getHP();
-	float getHeart();
-	void setHeart(float heart);
-	float getMaxheart();
+	virtual void setSpeed(float speed);
+	virtual float getSpeed();
+	virtual void setDirection(Vec2 direction);
+	virtual Vec2 getDirection();
+	virtual Sprite* getSprite();
+	virtual void setMaxHP(float hp);
+	virtual float getMaxHP();
+	virtual void setHP(float hp);
+	virtual float getHP();
+	virtual int getHeart();
+	virtual void setHeart(float heart);
+	virtual float getMaxheart();
 	void setMaxheart(float heart);
-	void setDamage(float damage);
-	float getDamage();
+	virtual void setDamage(float damage);
+	virtual float getDamage();
 	virtual void takeDamage(float damage);
 	virtual void takeHeart_req(float heart);
 	void pause();

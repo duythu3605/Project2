@@ -13,7 +13,9 @@ public:
 	Heart();
 	~Heart();
 	void init();
+	void onDestroy();
 	void update(float dt);
+	
 };
 
 #endif // __HEART_H__

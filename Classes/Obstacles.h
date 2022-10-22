@@ -2,11 +2,12 @@
 #define __OBSTACLES_H__
 
 #include "cocos2d.h"
+#include"Entity.h"
 
 USING_NS_CC;
 using namespace std;
 
-class Obstacles
+class Obstacles : public Entity
 {
 private:
 public:
@@ -53,9 +54,10 @@ public:
 	void setDamage(float damage);
 	float getDamage();
 	void setHeart(float heart);
-	float getHeart();
+	int getHeart();
 	virtual void takeDamage(float damage);
 	virtual void takeHeart(float heart);
+	virtual void onDestroy();
 	void pause();
 	void resume();
 };

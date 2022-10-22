@@ -11,6 +11,7 @@ Player::Player() : Entity("Player/player.png") {
 	this->body->setContactTestBitmask(PLAYER_CONTACT_TEST_BITMASK);
 	this->body->setCategoryBitmask(PLAYER_CATEGORY_BITMASK);
 	this->body->setCollisionBitmask(PLAYER_COLLISION_BITMASK);
+	this->sprite->setScale(0.7f);
 	
 	
 	this->init();
@@ -24,7 +25,7 @@ Player::~Player() {
 void Player::init()
 {
 
-	this->damage = 1;
+	this->damage = 100;
 	this->heart = 2;
 	this->maxHeart = 2;
 	this->setSpeed(300);
@@ -49,25 +50,11 @@ void Player::takeDamage(float damage) {
 }
 void Player::takeHeart(float heart) {
 	this->heart += heart;
-	
-	/*if (this->hp >= 1)
-	{
-		if (this->heart >= 0) {
-			this->heart++;
-			this->hp = this->maxHP;
-		}
-	}
-	*/
-	
 }
 
 void Player::Jump() {
 	this->body->setVelocity(Vec2(0, this->jumpFoc));
 }
-
-
-
-
 int Player::getHeart() {
 	return this->heart;
 }
@@ -95,7 +82,6 @@ void Player::update(float dt) {
 	if (this->sprite->getPositionY() > GameManager::getVisibleSize().height / 5.5) {
 		this->body->setGravityEnable(true);
 	}
-
 }
 
 void Player::initEventListener() {		

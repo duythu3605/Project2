@@ -22,6 +22,7 @@ Scene* GameManager::world = NULL;
 	std::vector<Obstacles*> GameManager::enemies;
 	std::vector<Obstacles*> GameManager::obstacles;
 bool GameManager::isPause = false;
+float GameManager::mark = -1;
 
 Player* GameManager::player = NULL;
 
@@ -110,8 +111,10 @@ void GameManager::spawnSwords() {
 	GameManager::world->addChild(enemy->getSprite());
 	enemy->init();
 	
+	entities.push_back(enemy);
 	enemies.push_back(enemy);
 	obstacles.push_back(enemy);
+	
 }
 void GameManager::spawnRock() {
 	int enemyMaxRand = 1;
@@ -139,8 +142,10 @@ void GameManager::spawnRock() {
 	GameManager::world->addChild(enemy->getSprite());
 	enemy->init();
 
+	entities.push_back(enemy);
 	enemies.push_back(enemy);
 	obstacles.push_back(enemy);
+	
 }
 void GameManager::spawnBomb() {
 
@@ -169,8 +174,10 @@ void GameManager::spawnBomb() {
 	GameManager::world->addChild(enemy->getSprite());
 	enemy->init();
 
+	entities.push_back(enemy);
 	enemies.push_back(enemy);
 	obstacles.push_back(enemy);
+	
 }
 
 void GameManager::spawnSawBlade() {
@@ -210,8 +217,10 @@ void GameManager::spawnSawBlade() {
 	GameManager::world->addChild(enemy->getSprite());
 	enemy->init();
 
+	entities.push_back(enemy);
 	enemies.push_back(enemy);
 	obstacles.push_back(enemy);
+	
 }
 
 void GameManager::spawnHeart() {
@@ -238,8 +247,10 @@ void GameManager::spawnHeart() {
 	GameManager::world->addChild(enemy->getSprite());
 	enemy->init();
 
+	entities.push_back(enemy);
 	enemies.push_back(enemy);
 	obstacles.push_back(enemy);
+	
 }
 
 void GameManager::update(float dt) {
@@ -289,17 +300,21 @@ Entity* GameManager::findEntity(Sprite* sprite) {
 	return NULL;
 }
 
-void GameManager::destroyObstacles(Obstacles* obstacle) {
-	auto _obstacle = std::find(obstacles.begin(), obstacles.end(), obstacle);
-	auto _enemy = std::find(enemies.begin(), enemies.end(), obstacle);
+void GameManager::destroyEntity(Entity* entity) {
+	auto _obstacle = std::find(obstacles.begin(), obstacles.end(), entity);
+	auto _enemy = std::find(enemies.begin(), enemies.end(), entity);
+	auto _entity = std::find(entities.begin(), entities.end(), entity);
 
 	/*std::remove(entities.begin(), entities.end(), entity);
 	std::remove(enemies.begin(), enemies.end(), entity);*/
-	obstacle->destroy();
-	delete obstacle;
+	entity->destroy();
+	delete entity;
+
+
 
 	if (_obstacle != obstacles.end()) (*_obstacle) = NULL;
 	if (_enemy != enemies.end()) (*_enemy) = NULL;
+	if (_entity != entities.end()) (*_entity) = NULL;
 }
 
 void GameManager::pauseGame() {
@@ -361,10 +376,10 @@ void GameManager::resetGame() {
 	GameManager::player = NULL;
 
 }
-//void GameManager::setMark(float mark) {
-//	this->mark = mark;
-//}
-//float GameManager::getMark() {
-//	return this->mark;
-//}
+void GameManager::setMark(float mark) {
+	GameManager::mark = mark;
+}
+float GameManager::getMark() {
+	return GameManager::mark;
+}
 

@@ -41,42 +41,26 @@ bool MainMenuScene::init()
 	// music background
 	AudioManager::set_idBG("Audio/background3.mp3", true);
 	AudioManager::get_idBG();
-
-	/*AudioEngine::preload("sounds/background.mp3", [&](bool isSuccess) {
-		log("Preload background.pm3 %s", isSuccess ? "Success" : "Failed");
-		if (isSuccess) {
-			this->backgroundMusic = AudioEngine::play2d("sounds/background.mp3", true);
-		}
-	});*/
-
-	this->soundLabel = Label::createWithSystemFont(std::string("Sound: ") + std::string(this->soundOn ? "ON" : "OFF"), "Arial", 20);
-
-	/*Vector<MenuItem*> menuItems = {
-		
-		MenuItemLabel::create(Label::createWithSystemFont("Play", "Arial", 20)  , [=](Ref* sender) {
-			this->gameScene = GameScene::create();
-			Director::getInstance()->replaceScene(this->gameScene);
-			
-		}),
-		MenuItemLabel::create(this->soundLabel, [&](Ref* sender) {
-			this->soundOn = !this->soundOn;
-			this->soundLabel->setString(std::string("Sound: ") + std::string(this->soundOn ? "ON" : "OFF"));
-		}),
-		MenuItemLabel::create(Label::createWithSystemFont("Quit", "Arial", 20)  , [=](Ref* sender) {
-			Director::getInstance()->end();
-		}),
-	};*/
 	
 	Vector<MenuItem*> menuItems = {
-		MenuItemImage::create("Button/btnPlay.jpg","Button/btnPlay1.jpg",[&](Ref* sender) {
+		MenuItemImage::create("Button/btnplay.png","Button/btnplay_pressed.png",[&](Ref* sender) {
 			this->gameScene = GameScene::create();
 			Director::getInstance()->replaceScene(this->gameScene);
 			AudioManager::StopMusic(AudioManager::get_idBG());
 		}),
-		MenuItemImage::create("Button/btnVolume.jpg","Button/btnVolume1.jpg",[&](Ref* sender) {
+		MenuItemImage::create("Button/btnvolume.png","Button/btnvolume_pressed.png",[&](Ref* sender) { 
+			if(soundOn == true){
+				AudioManager::PauseSound();
+				soundOn = false;
+			}
+			else {
+				AudioManager::ResumeSound();
+				soundOn = true;
+			}
+				
 			
 		}),
-		MenuItemImage::create("Button/btnquit.jpg","Button/btnquit1.jpg",[&](Ref* sender) {
+		MenuItemImage::create("Button/btnquit.png","Button/btnquit_pressed.png",[&](Ref* sender) {
 			Director::getInstance()->end();
 			
 		}),
@@ -84,7 +68,6 @@ bool MainMenuScene::init()
 
 	auto menu = Menu::createWithArray(menuItems);
 	addChild(menu);
-	//menu->alignItemsVertically();
 	menu->alignItemsVerticallyWithPadding(20);
 	menu->setPosition(Vec2(visibleSize.width / 2, visibleSize.height / 3));
 

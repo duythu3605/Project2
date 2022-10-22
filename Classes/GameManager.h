@@ -20,12 +20,8 @@ public:
 	static Player* player;
 	static std::vector<Obstacles*> obstacles;
 	static bool isPause;
-	//static	float  mark;
-	static GameManager* getInstance();
-	/*static int id_sword_sound;
-	static int id_rock_sound;
-	static int id_sawblade_sound;
-	static int id_bomb_sound;*/
+	static	float  mark;
+	
 	
 	
 
@@ -46,11 +42,12 @@ public:
 	static void addObstacles(Obstacles* obstacle);
 	static Obstacles* findObstacles(Sprite* sprite);
 	static Entity* findEntity(Sprite* sprite);
-	static void destroyObstacles(Obstacles* entity);
+	static void destroyEntity(Entity* entity);
 	
-	/*void setMark(float mark);
-	float  getMark();*/
+	static void setMark(float mark);
+	static float  getMark();
 	
+
 
 	//static void destroyEnity(Entity* entity);
 
